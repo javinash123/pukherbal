@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Herbal Products Homepage"
+version = "1.0.0"
+id = "artifacts/herbal-homepage"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21954
+
+[services.development]
+run = "pnpm --filter @workspace/herbal-homepage run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/herbal-homepage", "run", "build" ]
+publicDir = "artifacts/herbal-homepage/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21954"
+BASE_PATH = "/"

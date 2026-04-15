@@ -1,0 +1,103 @@
+uploads = []
+
+[[generated]]
+id = "ew-yKxNlz5EGvDb-a0m-9"
+uri = "file://artifacts/herbal-homepage/src/assets/hero-1.png"
+type = "image"
+title = "Hero banner 1"
+
+[[generated]]
+id = "0-kAtfk-bbO1xQIWrYvk8"
+uri = "file://artifacts/herbal-homepage/src/assets/hero-2.png"
+type = "image"
+title = "Hero banner 2"
+
+[[generated]]
+id = "N-Cyf_3ZkJ95LS8Cd4Rq0"
+uri = "file://artifacts/herbal-homepage/src/assets/hero-3.png"
+type = "image"
+title = "Hero banner 3"
+
+[[generated]]
+id = "u-6o3PifWiOyiiZ_4bkj8"
+uri = "file://artifacts/herbal-homepage/src/assets/about-image.png"
+type = "image"
+title = "About Us botanical lab"
+
+[[generated]]
+id = "mMZUuzX3-UK4EwAVESkhH"
+uri = "file://artifacts/herbal-homepage/src/assets/product-ashwagandha.png"
+type = "image"
+title = "Ashwagandha extract"
+
+[[generated]]
+id = "mtUpJhII10-X_VsuUaiLl"
+uri = "file://artifacts/herbal-homepage/src/assets/product-turmeric.png"
+type = "image"
+title = "Turmeric powder"
+
+[[generated]]
+id = "OVb6AaF4Mln85uX9Glyap"
+uri = "file://artifacts/herbal-homepage/src/assets/product-neem.png"
+type = "image"
+title = "Neem oil"
+
+[[generated]]
+id = "CiW5N6PO4SVEKWtJUMe2b"
+uri = "file://artifacts/herbal-homepage/src/assets/product-brahmi.png"
+type = "image"
+title = "Brahmi extract"
+
+[[generated]]
+id = "IWLU3xz3yFJTzy18TQ8Av"
+uri = "file://artifacts/herbal-homepage/src/assets/product-amla.png"
+type = "image"
+title = "Amla powder"
+
+[[generated]]
+id = "AgceO2YSqv1h3epGgSful"
+uri = "file://artifacts/herbal-homepage/src/assets/product-moringa.png"
+type = "image"
+title = "Moringa extract"
+
+[[outputs]]
+id = "_3CE0y84CvpaZobNh9EBV"
+uri = "file://artifacts/herbal-homepage/src/assets/category-extracts.jpg"
+type = "image"
+title = "botanical extracts laboratory dark green"
+
+[[outputs]]
+id = "Mbh7ObP3ZZjaJr3wmNVsf"
+uri = "file://artifacts/herbal-homepage/src/assets/category-powders.jpg"
+type = "image"
+title = "colorful herbal powders in bowls"
+
+[[outputs]]
+id = "2scNYjoAUEklulsGngBRe"
+uri = "file://artifacts/herbal-homepage/src/assets/category-oils.jpg"
+type = "image"
+title = "essential oils amber glass bottles"
+
+[[outputs]]
+id = "lKbqddnT8GCRKQJWwbn-D"
+uri = "file://artifacts/herbal-homepage/src/assets/category-herbs.jpg"
+type = "image"
+title = "ayurvedic herbs roots leaves"
+
+[[outputs]]
+id = "8S2Jk-Hfb0u1DxEAKVlAg"
+uri = "file://artifacts/herbal-homepage/src/assets/category-standardized.jpg"
+type = "image"
+title = "scientific scale with green plants"
+
+[[outputs]]
+id = "5pgtIZvti5h4rCPMOQUQU"
+uri = "file://artifacts/herbal-homepage/src/assets/category-carrier.jpg"
+type = "image"
+title = "pouring golden oil"
+
+[[outputs]]
+id = "wgkbjeJ_noiO4P9mJk90b"
+uri = "file://artifacts/herbal-homepage/dist/pukhrajherbals.tar.gz"
+type = "unspecified"
+title = "pukhrajherbals.tar.gz — Production Build"
