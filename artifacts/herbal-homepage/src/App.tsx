@@ -20,6 +20,7 @@ import AdminCategories from "@/pages/admin/categories";
 import AdminProducts from "@/pages/admin/products";
 import AdminBlogs from "@/pages/admin/blogs";
 import AdminSettings from "@/pages/admin/settings";
+import AdminEnquiries from "@/pages/admin/enquiries";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ function AppRouter() {
       <Route path="/admin/products" component={AdminProducts} />
       <Route path="/admin/blogs" component={AdminBlogs} />
       <Route path="/admin/settings" component={AdminSettings} />
+      <Route path="/admin/enquiries" component={AdminEnquiries} />
       <Route path="/admin" component={AdminLogin} />
       <Route component={NotFound} />
     </Switch>

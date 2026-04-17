@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { db, blogsTable } from "@workspace/db";
-import { eq, asc, and } from "drizzle-orm";
+import { Blog } from "../models/Blog";
 import { authMiddleware } from "../middleware/auth";
 
 const router = Router();
@@ -9,28 +8,33 @@ function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
+function serialize(doc: any) {
+  const obj = doc.toObject ? doc.toObject() : doc;
+  return { ...obj, id: obj._id.toString(), _id: undefined };
+}
+
 // Public: list published blogs
 router.get("/blogs", async (_req, res) => {
   try {
-    const posts = await db.select().from(blogsTable).where(eq(blogsTable.published, true)).orderBy(asc(blogsTable.createdAt));
-    res.json(posts.reverse());
+    const posts = await Blog.find({ published: true }).sort({ createdAt: -1 });
+    res.json(posts.map(serialize));
   } catch { res.status(500).json({ error: "Internal server error" }); }
 });
 
 // Public: get by slug
 router.get("/blogs/:slug", async (req, res) => {
   try {
-    const [post] = await db.select().from(blogsTable).where(and(eq(blogsTable.slug, req.params.slug), eq(blogsTable.published, true))).limit(1);
+    const post = await Blog.findOne({ slug: req.params.slug, published: true });
     if (!post) { res.status(404).json({ error: "Not found" }); return; }
-    res.json(post);
+    res.json(serialize(post));
   } catch { res.status(500).json({ error: "Internal server error" }); }
 });
 
-// Admin: list all blogs
+// Admin: list all
 router.get("/admin/blogs", authMiddleware, async (_req, res) => {
   try {
-    const posts = await db.select().from(blogsTable).orderBy(asc(blogsTable.createdAt));
-    res.json(posts.reverse());
+    const posts = await Blog.find().sort({ createdAt: -1 });
+    res.json(posts.map(serialize));
   } catch { res.status(500).json({ error: "Internal server error" }); }
 });
 
@@ -40,29 +44,27 @@ router.post("/admin/blogs", authMiddleware, async (req, res) => {
     const { title, excerpt, content, imageUrl, category, readTime, author, published = false, featured = false } = req.body;
     if (!title) { res.status(400).json({ error: "Title is required" }); return; }
     const slug = slugify(title) + "-" + Date.now();
-    const [post] = await db.insert(blogsTable).values({ title, slug, excerpt, content, imageUrl, category, readTime, author: author || "Pukhraj Herbals", published, featured }).returning();
-    res.status(201).json(post);
+    const post = await Blog.create({ title, slug, excerpt, content, imageUrl, category, readTime, author: author || "Pukhraj Herbals", published, featured });
+    res.status(201).json(serialize(post));
   } catch { res.status(500).json({ error: "Internal server error" }); }
 });
 
 // Admin: update
 router.put("/admin/blogs/:id", authMiddleware, async (req, res) => {
   try {
-    const id = Number(req.params.id);
-    const updates: any = { updatedAt: new Date() };
+    const updates: any = {};
     const fields = ["title", "excerpt", "content", "imageUrl", "category", "readTime", "author", "published", "featured"];
     for (const f of fields) { if (req.body[f] !== undefined) updates[f] = req.body[f]; }
-    const [post] = await db.update(blogsTable).set(updates).where(eq(blogsTable.id, id)).returning();
+    const post = await Blog.findByIdAndUpdate(req.params.id, updates, { new: true });
     if (!post) { res.status(404).json({ error: "Not found" }); return; }
-    res.json(post);
+    res.json(serialize(post));
   } catch { res.status(500).json({ error: "Internal server error" }); }
 });
 
 // Admin: delete
 router.delete("/admin/blogs/:id", authMiddleware, async (req, res) => {
   try {
-    const id = Number(req.params.id);
-    await db.delete(blogsTable).where(eq(blogsTable.id, id));
+    await Blog.findByIdAndDelete(req.params.id);
     res.json({ success: true });
   } catch { res.status(500).json({ error: "Internal server error" }); }
 });

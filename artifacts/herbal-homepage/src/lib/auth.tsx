@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, type ReactNode }
 import { api } from "./api";
 
 interface AuthUser {
-  id: number;
+  id: string;
   name: string;
   email: string;
   role: string;

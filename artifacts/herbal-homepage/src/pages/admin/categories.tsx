@@ -4,7 +4,7 @@ import AdminGuard from "./guard";
 import { api } from "@/lib/api";
 
 interface Category {
-  id: number;
+  id: string;
   name: string;
   slug: string;
   description?: string;
@@ -19,7 +19,7 @@ export default function AdminCategories() {
   const [cats, setCats] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [editId, setEditId] = useState<number | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -54,7 +54,7 @@ export default function AdminCategories() {
     }
   };
 
-  const handleDelete = async (id: number, name: string) => {
+  const handleDelete = async (id: string, name: string) => {
     if (!confirm(`Delete category "${name}"? This cannot be undone.`)) return;
     try { await api.deleteCategory(id); load(); } catch (err: any) { setError(err.message); }
   };
@@ -116,7 +116,7 @@ export default function AdminCategories() {
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
                     <th className="text-left px-6 py-3 font-medium text-gray-600">Name</th>
-                    <th className="text-left px-6 py-3 font-medium text-gray-600">Slug</th>
+                    <th className="text-left px-6 py-3 font-medium text-gray-600">Description</th>
                     <th className="text-left px-6 py-3 font-medium text-gray-600">Order</th>
                     <th className="text-left px-6 py-3 font-medium text-gray-600">Status</th>
                     <th className="text-right px-6 py-3 font-medium text-gray-600">Actions</th>
@@ -126,7 +126,7 @@ export default function AdminCategories() {
                   {cats.map((cat) => (
                     <tr key={cat.id} className="hover:bg-gray-50">
                       <td className="px-6 py-3 font-medium text-gray-800">{cat.name}</td>
-                      <td className="px-6 py-3 text-gray-500">{cat.slug}</td>
+                      <td className="px-6 py-3 text-gray-500 max-w-xs truncate">{cat.description || "—"}</td>
                       <td className="px-6 py-3 text-gray-500">{cat.sortOrder}</td>
                       <td className="px-6 py-3">
                         <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${cat.active ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>

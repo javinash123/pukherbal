@@ -4,10 +4,10 @@ import AdminGuard from "./guard";
 import { api } from "@/lib/api";
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   slug: string;
-  categoryId?: number;
+  categoryId?: string;
   specification?: string;
   casNumber?: string;
   imageUrl?: string;
@@ -17,7 +17,7 @@ interface Product {
   sortOrder: number;
 }
 
-interface Category { id: number; name: string; }
+interface Category { id: string; name: string; }
 
 const emptyForm = { name: "", categoryId: "" as any, specification: "", casNumber: "", imageUrl: "", description: "", sortOrder: 0, active: true, featured: false };
 
@@ -26,7 +26,7 @@ export default function AdminProducts() {
   const [cats, setCats] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [editId, setEditId] = useState<number | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -53,7 +53,7 @@ export default function AdminProducts() {
     setSaving(true);
     setError("");
     try {
-      const data = { ...form, categoryId: form.categoryId ? Number(form.categoryId) : null };
+      const data = { ...form, categoryId: form.categoryId || null };
       if (editId) await api.updateProduct(editId, data);
       else await api.createProduct(data);
       setShowForm(false);
@@ -65,12 +65,12 @@ export default function AdminProducts() {
     }
   };
 
-  const handleDelete = async (id: number, name: string) => {
+  const handleDelete = async (id: string, name: string) => {
     if (!confirm(`Delete product "${name}"?`)) return;
     try { await api.deleteProduct(id); load(); } catch (err: any) { setError(err.message); }
   };
 
-  const catName = (id?: number) => cats.find(c => c.id === id)?.name || "—";
+  const catName = (id?: string) => cats.find(c => c.id === id)?.name || "—";
 
   return (
     <AdminGuard>

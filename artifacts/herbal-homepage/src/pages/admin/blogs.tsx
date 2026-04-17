@@ -4,7 +4,7 @@ import AdminGuard from "./guard";
 import { api } from "@/lib/api";
 
 interface Blog {
-  id: number;
+  id: string;
   title: string;
   slug: string;
   excerpt?: string;
@@ -23,7 +23,7 @@ export default function AdminBlogs() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [editId, setEditId] = useState<number | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -58,7 +58,7 @@ export default function AdminBlogs() {
     }
   };
 
-  const handleDelete = async (id: number, title: string) => {
+  const handleDelete = async (id: string, title: string) => {
     if (!confirm(`Delete blog post "${title}"?`)) return;
     try { await api.deleteBlog(id); load(); } catch (err: any) { setError(err.message); }
   };

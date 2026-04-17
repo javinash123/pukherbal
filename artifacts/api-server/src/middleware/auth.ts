@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 const JWT_SECRET = process.env.SESSION_SECRET || "pukhraj-herbals-secret-2024";
 
 export interface AuthPayload {
-  id: number;
+  id: string;
   email: string;
   role: string;
 }

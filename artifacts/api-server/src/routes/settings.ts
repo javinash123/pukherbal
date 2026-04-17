@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { db, settingsTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { Setting } from "../models/Setting";
 import { authMiddleware } from "../middleware/auth";
 
 const router = Router();
@@ -8,7 +7,7 @@ const router = Router();
 // Public: get all settings as key→value map
 router.get("/settings", async (_req, res) => {
   try {
-    const rows = await db.select().from(settingsTable);
+    const rows = await Setting.find();
     const map: Record<string, string> = {};
     for (const row of rows) map[row.key] = row.value;
     res.json(map);
@@ -21,14 +20,12 @@ router.put("/admin/settings/:key", authMiddleware, async (req, res) => {
     const { key } = req.params;
     const { value } = req.body;
     if (value === undefined) { res.status(400).json({ error: "value is required" }); return; }
-    const existing = await db.select().from(settingsTable).where(eq(settingsTable.key, key)).limit(1);
-    if (existing.length) {
-      const [s] = await db.update(settingsTable).set({ value, updatedAt: new Date() }).where(eq(settingsTable.key, key)).returning();
-      res.json(s);
-    } else {
-      const [s] = await db.insert(settingsTable).values({ key, value }).returning();
-      res.json(s);
-    }
+    const setting = await Setting.findOneAndUpdate(
+      { key },
+      { key, value },
+      { upsert: true, new: true }
+    );
+    res.json({ key: setting.key, value: setting.value });
   } catch { res.status(500).json({ error: "Internal server error" }); }
 });
 

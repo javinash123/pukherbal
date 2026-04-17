@@ -10,24 +10,23 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { api } from "@/lib/api";
 
 // Assets (Using the generated & stock images)
 import hero1 from "@/assets/hero-1.png";
 import hero2 from "@/assets/hero-2.png";
 import hero3 from "@/assets/hero-3.png";
 import aboutImg from "@/assets/about-image.png";
-import prodAshwagandha from "@/assets/product-ashwagandha.png";
-import prodTurmeric from "@/assets/product-turmeric.png";
-import prodNeem from "@/assets/product-neem.png";
-import prodBrahmi from "@/assets/product-brahmi.png";
-import prodAmla from "@/assets/product-amla.png";
-import prodMoringa from "@/assets/product-moringa.png";
 import catExtracts from "@/assets/category-extracts.jpg";
 import catPowders from "@/assets/category-powders.jpg";
 import catOils from "@/assets/category-oils.jpg";
 import catHerbs from "@/assets/category-herbs.jpg";
 import catStandardized from "@/assets/category-standardized.jpg";
 import catCarrier from "@/assets/category-carrier.jpg";
+
+const FALLBACK_CAT_IMGS = [catExtracts, catPowders, catOils, catHerbs, catStandardized, catCarrier];
+const FALLBACK_PROD_IMG = "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&q=80&w=600";
+const FALLBACK_BLOG_IMG = "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&q=80&w=800";
 
 export default function Home() {
   return (
@@ -258,6 +257,7 @@ function LatestProductsSection() {
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+  const [products, setProducts] = useState<any[]>([]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -266,14 +266,12 @@ function LatestProductsSection() {
     return () => clearInterval(interval);
   }, [emblaApi]);
 
-  const products = [
-    { name: "Ashwagandha Extract", desc: "Standardized to 5% Withanolides. Premium adaptogen for stress support.", img: prodAshwagandha },
-    { name: "Turmeric Powder", desc: "High Curcumin content. Anti-inflammatory powerhouse.", img: prodTurmeric },
-    { name: "Neem Oil", desc: "Cold-pressed pure oil. Exceptional for skin and cosmetic formulations.", img: prodNeem },
-    { name: "Brahmi Extract", desc: "Standardized Bacosides. Cognitive support and mental clarity.", img: prodBrahmi },
-    { name: "Amla Powder", desc: "Rich in Vitamin C. Antioxidant and immune support.", img: prodAmla },
-    { name: "Moringa Extract", desc: "Nutrient-dense superfood extract for vitality.", img: prodMoringa },
-  ];
+  useEffect(() => {
+    api.getProducts().then(all => {
+      const featured = all.filter((p: any) => p.featured);
+      setProducts(featured.length > 0 ? featured : all.slice(0, 6));
+    }).catch(() => {});
+  }, []);
 
   return (
     <section id="products" className="py-24 bg-muted/30">
@@ -307,7 +305,7 @@ function LatestProductsSection() {
             >
               <div className="bg-card rounded-2xl overflow-hidden border border-border shadow-sm group-hover:shadow-xl transition-all duration-500 h-full flex flex-col">
                 <div className="relative aspect-square overflow-hidden bg-muted/50">
-                  <img src={product.img} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <img src={product.imageUrl || FALLBACK_PROD_IMG} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                   
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-4 p-6">
@@ -321,7 +319,7 @@ function LatestProductsSection() {
                 </div>
                 <div className="p-6 flex flex-col flex-1">
                   <h4 className="text-xl font-serif font-bold text-foreground mb-2 group-hover:text-primary transition-colors">{product.name}</h4>
-                  <p className="text-sm text-muted-foreground line-clamp-2">{product.desc}</p>
+                  <p className="text-sm text-muted-foreground line-clamp-2">{product.description}</p>
                 </div>
               </div>
             </motion.div>
@@ -333,14 +331,11 @@ function LatestProductsSection() {
 }
 
 function CategoriesSection() {
-  const categories = [
-    { name: "Extracts", img: catExtracts },
-    { name: "Powders", img: catPowders },
-    { name: "Essential Oils", img: catOils },
-    { name: "Ayurvedic Herbs", img: catHerbs },
-    { name: "Standardized Extracts", img: catStandardized },
-    { name: "Carrier Oils", img: catCarrier },
-  ];
+  const [categories, setCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    api.getCategories().then(setCategories).catch(() => {});
+  }, []);
 
   return (
     <section id="categories" className="py-24 bg-background">
@@ -353,18 +348,25 @@ function CategoriesSection() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {categories.map((cat, idx) => (
             <motion.div
-              key={idx}
+              key={cat.id}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
               className="relative rounded-2xl overflow-hidden aspect-[4/3] group cursor-pointer"
             >
-              <img src={cat.img || "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&q=80&w=800"} alt={cat.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              <img
+                src={cat.imageUrl || FALLBACK_CAT_IMGS[idx % FALLBACK_CAT_IMGS.length]}
+                alt={cat.name}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent transition-opacity duration-300 group-hover:from-black/90"></div>
               
               <div className="absolute inset-0 p-8 flex flex-col justify-end items-start text-white">
                 <h3 className="text-2xl font-serif font-bold mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">{cat.name}</h3>
+                {cat.description && (
+                  <p className="text-white/70 text-sm mb-2 opacity-0 group-hover:opacity-100 transition-all duration-300 line-clamp-2">{cat.description}</p>
+                )}
                 <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2 text-sm font-medium">
                   <span>View Products</span>
                   <ArrowRight className="w-4 h-4" />
@@ -450,26 +452,16 @@ function ProductMotionSection() {
 }
 
 function KeyProductsSection() {
-  const products = [
-    {
-      name: "Curcumin 95%",
-      desc: "Highly purified turmeric extract. A potent anti-inflammatory and antioxidant compound used in premium nutraceuticals globally.",
-      tags: ["Anti-inflammatory", "Antioxidant", "Standardized 95%"],
-      img: prodTurmeric
-    },
-    {
-      name: "Premium Ashwagandha",
-      desc: "Our signature adaptogenic root extract. Cultivated in pristine soils and processed to preserve the complete spectrum of active withanolides.",
-      tags: ["Adaptogen", "Stress Relief", "KSM-66 Equivalent"],
-      img: prodAshwagandha
-    },
-    {
-      name: "Pure Bacopa Monnieri",
-      desc: "Ancient nootropic herb extracted with modern precision to support cognitive function, memory, and mental clarity.",
-      tags: ["Nootropic", "Cognitive Support", "Standardized Bacosides"],
-      img: prodBrahmi
-    }
-  ];
+  const [products, setProducts] = useState<any[]>([]);
+
+  useEffect(() => {
+    api.getProducts().then(all => {
+      const featured = all.filter((p: any) => p.featured);
+      setProducts((featured.length > 0 ? featured : all).slice(0, 3));
+    }).catch(() => {});
+  }, []);
+
+  if (products.length === 0) return null;
 
   return (
     <section className="py-24 bg-muted/20">
@@ -482,7 +474,7 @@ function KeyProductsSection() {
         <div className="grid gap-12 lg:gap-16">
           {products.map((product, idx) => (
             <motion.div 
-              key={idx}
+              key={product.id}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -491,19 +483,20 @@ function KeyProductsSection() {
             >
               <div className="w-full lg:w-1/2">
                 <div className="relative rounded-2xl overflow-hidden aspect-[4/3] shadow-lg group">
-                  <img src={product.img} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <img src={product.imageUrl || FALLBACK_PROD_IMG} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-2xl"></div>
                 </div>
               </div>
               <div className="w-full lg:w-1/2">
                 <h3 className="text-3xl font-serif font-bold text-foreground mb-4">{product.name}</h3>
-                <p className="text-lg text-foreground/70 mb-6 leading-relaxed">{product.desc}</p>
+                <p className="text-lg text-foreground/70 mb-6 leading-relaxed">{product.description}</p>
                 <div className="flex flex-wrap gap-2 mb-8">
-                  {product.tags.map(tag => (
-                    <span key={tag} className="px-4 py-1.5 bg-primary/10 text-primary font-medium text-sm rounded-full">
-                      {tag}
-                    </span>
-                  ))}
+                  {product.specification && (
+                    <span className="px-4 py-1.5 bg-primary/10 text-primary font-medium text-sm rounded-full">{product.specification}</span>
+                  )}
+                  {product.casNumber && (
+                    <span className="px-4 py-1.5 bg-primary/10 text-primary font-medium text-sm rounded-full">CAS: {product.casNumber}</span>
+                  )}
                 </div>
                 <Button size="lg" className="rounded-full px-8 hover:shadow-lg transition-all">
                   Learn More
@@ -518,11 +511,13 @@ function KeyProductsSection() {
 }
 
 function BlogSection() {
-  const blogs = [
-    { title: "The Science of Standardized Extracts", date: "Oct 12, 2023", excerpt: "Understanding why standardization is critical for consistent therapeutic results in nutraceuticals.", img: "https://images.unsplash.com/photo-1582560475093-ba66accbc424?auto=format&fit=crop&q=80&w=800" },
-    { title: "Sustainable Botanical Sourcing", date: "Sep 28, 2023", excerpt: "How our farm-to-flask approach ensures quality while protecting the earth's delicate ecosystems.", img: "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&q=80&w=800" },
-    { title: "Ayurveda in Modern Cosmetics", date: "Sep 15, 2023", excerpt: "Exploring the rising demand for potent herbal extracts in high-end global skincare formulations.", img: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&q=80&w=800" }
-  ];
+  const [blogs, setBlogs] = useState<any[]>([]);
+
+  useEffect(() => {
+    api.getBlogs().then(all => setBlogs(all.slice(0, 3))).catch(() => {});
+  }, []);
+
+  if (blogs.length === 0) return null;
 
   return (
     <section id="blog" className="py-24 bg-background">
@@ -532,13 +527,15 @@ function BlogSection() {
             <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">Latest Insights</h2>
             <p className="text-foreground/70 text-lg">Industry news, scientific breakthroughs, and botanical knowledge from our experts.</p>
           </div>
-          <Button variant="outline" className="rounded-full">View All Articles</Button>
+          <Link href="/blog">
+            <Button variant="outline" className="rounded-full">View All Articles</Button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogs.map((blog, idx) => (
             <motion.article 
-              key={idx}
+              key={blog.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -546,17 +543,17 @@ function BlogSection() {
               className="bg-card border border-border rounded-2xl overflow-hidden group hover:shadow-xl transition-all duration-300"
             >
               <div className="relative aspect-[16/9] overflow-hidden">
-                <img src={blog.img} alt={blog.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <img src={blog.imageUrl || FALLBACK_BLOG_IMG} alt={blog.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm text-foreground text-xs font-bold px-3 py-1.5 rounded-full">
-                  {blog.date}
+                  {new Date(blog.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                 </div>
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-serif font-bold text-foreground mb-3 group-hover:text-primary transition-colors">{blog.title}</h3>
                 <p className="text-foreground/70 mb-6 line-clamp-2">{blog.excerpt}</p>
-                <a href="#" className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all">
+                <Link href={`/blog/${blog.slug}`} className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all">
                   Read More <ArrowRight className="w-4 h-4" />
-                </a>
+                </Link>
               </div>
             </motion.article>
           ))}
