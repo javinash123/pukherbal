@@ -1,0 +1,12 @@
+{
+  "name": "pukhraj-herbal",
+  "version": "1.0.0",
+  "description": "Pukhraj Herbal website server",
+  "main": "index.cjs",
+  "scripts": {
+    "start": "node index.cjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

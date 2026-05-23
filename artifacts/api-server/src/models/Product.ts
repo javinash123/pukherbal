@@ -11,6 +11,9 @@ export interface IProduct extends Document {
   active: boolean;
   featured: boolean;
   sortOrder: number;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,6 +29,9 @@ const ProductSchema = new Schema<IProduct>({
   active: { type: Boolean, default: true },
   featured: { type: Boolean, default: false },
   sortOrder: { type: Number, default: 0 },
+  seoTitle: { type: String, default: "" },
+  seoDescription: { type: String, default: "" },
+  seoKeywords: { type: String, default: "" },
 }, { timestamps: true });
 
 export const Product = mongoose.model<IProduct>("Product", ProductSchema);

@@ -11,6 +11,9 @@ export interface IBlog extends Document {
   author: string;
   published: boolean;
   featured: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,6 +29,9 @@ const BlogSchema = new Schema<IBlog>({
   author: { type: String, default: "Pukhraj Herbals" },
   published: { type: Boolean, default: false },
   featured: { type: Boolean, default: false },
+  seoTitle: { type: String, default: "" },
+  seoDescription: { type: String, default: "" },
+  seoKeywords: { type: String, default: "" },
 }, { timestamps: true });
 
 export const Blog = mongoose.model<IBlog>("Blog", BlogSchema);

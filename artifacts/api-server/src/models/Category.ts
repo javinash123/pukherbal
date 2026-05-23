@@ -7,6 +7,9 @@ export interface ICategory extends Document {
   imageUrl?: string;
   active: boolean;
   sortOrder: number;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -18,6 +21,9 @@ const CategorySchema = new Schema<ICategory>({
   imageUrl: { type: String, default: "" },
   active: { type: Boolean, default: true },
   sortOrder: { type: Number, default: 0 },
+  seoTitle: { type: String, default: "" },
+  seoDescription: { type: String, default: "" },
+  seoKeywords: { type: String, default: "" },
 }, { timestamps: true });
 
 export const Category = mongoose.model<ICategory>("Category", CategorySchema);

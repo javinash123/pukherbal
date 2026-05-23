@@ -13,7 +13,11 @@ const navItems = [
   { href: "/admin/categories", label: "Categories", icon: "📂" },
   { href: "/admin/products", label: "Products", icon: "🌿" },
   { href: "/admin/blogs", label: "Blog Posts", icon: "📝" },
+  { href: "/admin/testimonials", label: "Testimonials", icon: "💬" },
   { href: "/admin/enquiries", label: "Enquiries", icon: "📬" },
+  { href: "/admin/hero-slides", label: "Hero Slides", icon: "🖼️" },
+  { href: "/admin/videos", label: "Videos", icon: "▶️" },
+  { href: "/admin/visitors", label: "Visitors", icon: "👥" },
   { href: "/admin/settings", label: "Settings", icon: "⚙️" },
 ];
 
@@ -39,7 +43,7 @@ export default function AdminLayout({ children, title }: Props) {
             </div>
           </div>
         </div>
-        <nav className="flex-1 p-4 space-y-1">
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {navItems.map((item) => (
             <Link key={item.href} href={item.href}>
               <a className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${location === item.href || location.startsWith(item.href + "/") ? "bg-green-700 text-white" : "text-green-200 hover:bg-green-800 hover:text-white"}`}>

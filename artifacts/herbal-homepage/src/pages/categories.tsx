@@ -72,9 +72,9 @@ export default function Categories() {
                       {cat.description && (
                         <p className="text-foreground/70 mb-6 leading-relaxed">{cat.description}</p>
                       )}
-                      <Link href={`/products`}>
+                      <Link href={`/categories/${cat.slug}`}>
                         <Button variant="outline" className="rounded-full border-primary text-primary hover:bg-primary hover:text-white group/btn">
-                          View All Products <ArrowRight className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                          View Products <ArrowRight className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                         </Button>
                       </Link>
                     </div>

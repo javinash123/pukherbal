@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "wouter";
-import logo from "@assets/pukhraj_herbals_logo-removebg-preview_1775509460215.png";
+import logo from "@/assets/logo-new.png";
 import { motion } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight, ArrowRight, Play, CheckCircle2, Phone, Mail, MapPin } from "lucide-react";
@@ -40,6 +40,7 @@ export default function Home() {
         <ProductMotionSection />
         <KeyProductsSection />
         <BlogSection />
+        <TestimonialsSection />
         <CertificationsSection />
         <ContactSection />
       </main>
@@ -48,13 +49,26 @@ export default function Home() {
   );
 }
 
+const STATIC_SLIDES = [
+  { imageUrl: hero1, title: "Nature's Pharmacy, Modern Precision", subtitle: "Premium botanical extracts manufactured under strict GMP & ISO standards.", ctaText: "Explore Our Extracts", ctaLink: "/products" },
+  { imageUrl: hero2, title: "Ancient Wisdom, Scientifically Proven", subtitle: "Highest quality Ayurvedic powders and roots sourced directly from pristine farms.", ctaText: "View Our Powders", ctaLink: "/products" },
+  { imageUrl: hero3, title: "Pure, Potent, Pristine", subtitle: "Essential oils extracted with utmost care to preserve nature's true essence.", ctaText: "Discover Essential Oils", ctaLink: "/products" },
+];
+
 function HeroSection() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 40 });
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [slides, setSlides] = useState<any[]>(STATIC_SLIDES);
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
   const scrollTo = useCallback((index: number) => emblaApi && emblaApi.scrollTo(index), [emblaApi]);
+
+  useEffect(() => {
+    api.getHeroSlides().then(apiSlides => {
+      if (apiSlides.length > 0) setSlides(apiSlides);
+    }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -68,34 +82,13 @@ function HeroSection() {
     return () => clearInterval(interval);
   }, [emblaApi]);
 
-  const slides = [
-    {
-      image: hero1,
-      title: "Nature's Pharmacy, Modern Precision",
-      subtitle: "Premium botanical extracts manufactured under strict GMP & ISO standards.",
-      cta: "Explore Our Extracts"
-    },
-    {
-      image: hero2,
-      title: "Ancient Wisdom, Scientifically Proven",
-      subtitle: "Highest quality Ayurvedic powders and roots sourced directly from pristine farms.",
-      cta: "View Our Powders"
-    },
-    {
-      image: hero3,
-      title: "Pure, Potent, Pristine",
-      subtitle: "Essential oils extracted with utmost care to preserve nature's true essence.",
-      cta: "Discover Essential Oils"
-    }
-  ];
-
   return (
     <section className="relative h-screen w-full overflow-hidden bg-foreground">
       <div className="absolute inset-0 z-0" ref={emblaRef}>
         <div className="flex h-full touch-pan-y">
           {slides.map((slide, index) => (
             <div key={index} className="relative h-full flex-[0_0_100%] min-w-0">
-              <img src={slide.image} alt={slide.title} className="absolute inset-0 w-full h-full object-cover object-center" />
+              <img src={slide.imageUrl} alt={slide.title} className="absolute inset-0 w-full h-full object-cover object-center" />
               <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/60 to-transparent"></div>
               
               <div className="container mx-auto px-4 md:px-6 h-full flex items-center relative z-10">
@@ -121,9 +114,11 @@ function HeroSection() {
                     animate={{ opacity: index === selectedIndex ? 1 : 0, y: index === selectedIndex ? 0 : 30 }}
                     transition={{ duration: 0.8, delay: 0.6 }}
                   >
-                    <Button size="lg" className="text-base h-14 px-8 rounded-full shadow-lg hover:shadow-xl transition-all" data-testid={`btn-hero-cta-${index}`}>
-                      {slide.cta}
-                    </Button>
+                    <Link href={slide.ctaLink || "/products"}>
+                      <Button size="lg" className="text-base h-14 px-8 rounded-full shadow-lg hover:shadow-xl transition-all" data-testid={`btn-hero-cta-${index}`}>
+                        {slide.ctaText || "Explore Now"}
+                      </Button>
+                    </Link>
                   </motion.div>
                 </div>
               </div>
@@ -189,9 +184,9 @@ function AboutSection() {
             <div className="absolute bottom-12 -right-6 lg:-right-12 bg-card p-6 rounded-xl shadow-xl border border-border max-w-xs">
               <div className="flex items-center gap-4 mb-2">
                 <CheckCircle2 className="w-8 h-8 text-primary" />
-                <div className="text-3xl font-serif font-bold text-foreground">25+</div>
+                <div className="text-3xl font-serif font-bold text-foreground">1999</div>
               </div>
-              <p className="text-sm font-medium text-muted-foreground">Years of Botanical Excellence</p>
+              <p className="text-sm font-medium text-muted-foreground">Est. in Mandsaur, India's Herbal Capital</p>
             </div>
           </motion.div>
 
@@ -202,22 +197,22 @@ function AboutSection() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="w-full lg:w-1/2"
           >
-            <h2 className="text-sm font-bold tracking-wider text-primary uppercase mb-3">About Pukhraj Herbals</h2>
+            <h2 className="text-sm font-bold tracking-wider text-primary uppercase mb-3">About Pukhraj Herbal</h2>
             <h3 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-foreground leading-tight mb-6">
-              Bridging Ancient Tradition & Modern Science
+              Pure Herbs. Proven Trust. Your Partner in Natural Wellness.
             </h3>
             <p className="text-lg text-foreground/70 mb-6 leading-relaxed">
-              We are a premier manufacturer of GMP & ISO certified natural extracts, powders, and essential oils. Our state-of-the-art facilities ensure that the profound wisdom of Ayurveda is delivered with uncompromising precision and purity.
+              Pukhraj Herbal is a leading herbal products manufacturer based in Mandsaur, Madhya Pradesh — widely known as India's Herbal Capital. Our 20,000 sq. meter pollution-free campus benefits from a naturally dry and pristine climate ideal for preserving herbal quality.
             </p>
             <p className="text-base text-foreground/70 mb-8 leading-relaxed">
-              From sustainable sourcing of raw botanicals to advanced extraction methodologies, every step of our process is designed to preserve the delicate active compounds of nature while meeting the rigorous demands of global pharmaceutical, nutraceutical, and cosmetic industries.
+              Founded in 1999 by Mr. Milind Jilhewar with 30+ years of expertise, we specialize in premium herbal extracts, powders, and oils using cold-pressed, supercritical CO₂, and steam distillation methods — trusted by 1000+ global partners across 20+ countries.
             </p>
 
             <div className="grid grid-cols-3 gap-4 mb-10">
               {[
-                { value: "500+", label: "Products" },
-                { value: "30+", label: "Countries" },
-                { value: "98%", label: "Client Retention" },
+                { value: "100+", label: "MT Capacity/Year" },
+                { value: "20+", label: "Countries" },
+                { value: "1000+", label: "Global Partners" },
               ].map(({ value, label }, i) => (
                 <motion.div
                   key={i}
@@ -303,25 +298,25 @@ function LatestProductsSection() {
               transition={{ duration: 0.5, delay: idx * 0.1 }}
               className="flex-[0_0_85%] sm:flex-[0_0_45%] md:flex-[0_0_30%] lg:flex-[0_0_22%] min-w-0 group cursor-pointer"
             >
-              <div className="bg-card rounded-2xl overflow-hidden border border-border shadow-sm group-hover:shadow-xl transition-all duration-500 h-full flex flex-col">
+              <Link href={`/products/${product.slug}`} className="block bg-card rounded-2xl overflow-hidden border border-border shadow-sm group-hover:shadow-xl transition-all duration-500 h-full flex flex-col">
                 <div className="relative aspect-square overflow-hidden bg-muted/50">
                   <img src={product.imageUrl || FALLBACK_PROD_IMG} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                   
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-4 p-6">
-                    <Button variant="secondary" className="w-full bg-white text-black hover:bg-primary hover:text-white rounded-full" data-testid={`btn-product-read-${idx}`}>
-                      Read More
-                    </Button>
-                    <Button className="w-full rounded-full" data-testid={`btn-product-enquiry-${idx}`}>
+                    <span className="w-full text-center bg-white text-black rounded-full py-2 text-sm font-semibold">
+                      View Details
+                    </span>
+                    <span className="block w-full text-center bg-primary text-white rounded-full py-2 text-sm font-semibold">
                       Enquiry Now
-                    </Button>
+                    </span>
                   </div>
                 </div>
                 <div className="p-6 flex flex-col flex-1">
                   <h4 className="text-xl font-serif font-bold text-foreground mb-2 group-hover:text-primary transition-colors">{product.name}</h4>
                   <p className="text-sm text-muted-foreground line-clamp-2">{product.description}</p>
                 </div>
-              </div>
+              </Link>
             </motion.div>
           ))}
         </div>
@@ -355,23 +350,25 @@ function CategoriesSection() {
               transition={{ duration: 0.5, delay: idx * 0.1 }}
               className="relative rounded-2xl overflow-hidden aspect-[4/3] group cursor-pointer"
             >
-              <img
-                src={cat.imageUrl || FALLBACK_CAT_IMGS[idx % FALLBACK_CAT_IMGS.length]}
-                alt={cat.name}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent transition-opacity duration-300 group-hover:from-black/90"></div>
-              
-              <div className="absolute inset-0 p-8 flex flex-col justify-end items-start text-white">
-                <h3 className="text-2xl font-serif font-bold mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">{cat.name}</h3>
-                {cat.description && (
-                  <p className="text-white/70 text-sm mb-2 opacity-0 group-hover:opacity-100 transition-all duration-300 line-clamp-2">{cat.description}</p>
-                )}
-                <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2 text-sm font-medium">
-                  <span>View Products</span>
-                  <ArrowRight className="w-4 h-4" />
+              <Link href={`/categories/${cat.slug}`} className="block absolute inset-0">
+                <img
+                  src={cat.imageUrl || FALLBACK_CAT_IMGS[idx % FALLBACK_CAT_IMGS.length]}
+                  alt={cat.name}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent transition-opacity duration-300 group-hover:from-black/90"></div>
+                
+                <div className="absolute inset-0 p-8 flex flex-col justify-end items-start text-white">
+                  <h3 className="text-2xl font-serif font-bold mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">{cat.name}</h3>
+                  {cat.description && (
+                    <p className="text-white/70 text-sm mb-2 opacity-0 group-hover:opacity-100 transition-all duration-300 line-clamp-2">{cat.description}</p>
+                  )}
+                  <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2 text-sm font-medium">
+                    <span>View Products</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
                 </div>
-              </div>
+              </Link>
             </motion.div>
           ))}
         </div>
@@ -380,71 +377,191 @@ function CategoriesSection() {
   );
 }
 
+function getYouTubeId(url: string): string | null {
+  const patterns = [
+    /youtu\.be\/([^?&]+)/,
+    /youtube\.com\/watch\?v=([^&]+)/,
+    /youtube\.com\/embed\/([^?&]+)/,
+    /youtube\.com\/shorts\/([^?&]+)/,
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+const FALLBACK_MOTIONS = [
+  { id: "f1", title: "Botanical Sourcing", img: catHerbs },
+  { id: "f2", title: "Precision Extraction", img: catExtracts },
+  { id: "f3", title: "Quality Assurance", img: catStandardized },
+  { id: "f4", title: "Final Product", img: catOils },
+  { id: "f5", title: "Pure Herbal Powders", img: catPowders },
+];
+
 function ProductMotionSection() {
-  // We don't have video URLs easily, so we simulate video cards with images + play button
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    align: "start",
-    dragFree: true,
-  });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", dragFree: true, loop: false });
+  const [videos, setVideos] = useState<any[]>([]);
+  const [playing, setPlaying] = useState<string | null>(null);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(true);
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
 
-  const motions = [
-    { title: "Botanical Sourcing", img: catHerbs },
-    { title: "Precision Extraction", img: catExtracts },
-    { title: "Quality Assurance", img: catStandardized },
-    { title: "Final Product", img: catOils },
-  ];
+  useEffect(() => {
+    if (!emblaApi) return;
+    const update = () => {
+      setCanPrev(emblaApi.canScrollPrev());
+      setCanNext(emblaApi.canScrollNext());
+    };
+    emblaApi.on("select", update);
+    emblaApi.on("reInit", update);
+    update();
+  }, [emblaApi]);
+
+  useEffect(() => {
+    api.getVideos().then(v => { if (v.length > 0) setVideos(v); }).catch(() => {});
+  }, []);
+
+  const hasVideos = videos.length > 0;
+  const items = hasVideos ? videos : FALLBACK_MOTIONS;
 
   return (
-    <section className="py-24 bg-foreground text-background">
-      <div className="container mx-auto px-4 md:px-6 mb-12">
-        <div className="flex items-end justify-between">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-2">Product in Motion</h2>
-            <p className="text-background/70">See our pristine manufacturing process in action.</p>
+    <section className="bg-[#0f1a0f] text-white overflow-hidden">
+      {/* Top header row */}
+      <div className="container mx-auto px-4 md:px-8 pt-16 pb-10">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+          <div className="max-w-xl">
+            <p className="text-primary text-sm font-semibold tracking-widest uppercase mb-3">@pukhrajherbal</p>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight">
+              Nature in motion,<br />
+              <span className="text-primary">our everything.</span>
+            </h2>
+            <p className="mt-4 text-white/60 text-base leading-relaxed max-w-md">
+              From farm to extract — witness the craftsmanship behind every batch of Pukhraj Herbal's premium botanical products.
+            </p>
           </div>
-          <div className="hidden md:flex gap-3">
-            <button onClick={scrollPrev} className="w-10 h-10 rounded-full border border-background/20 flex items-center justify-center hover:bg-primary hover:border-primary transition-colors">
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button onClick={scrollNext} className="w-10 h-10 rounded-full border border-background/20 flex items-center justify-center hover:bg-primary hover:border-primary transition-colors">
-              <ChevronRight className="w-5 h-5" />
-            </button>
+          <div className="flex items-center gap-4">
+            <Link href="/contact">
+              <button className="bg-primary hover:bg-primary/90 text-white px-7 py-3 rounded-full text-sm font-semibold transition-all hover:scale-105 whitespace-nowrap">
+                Get in Touch
+              </button>
+            </Link>
+            <div className="flex gap-2">
+              <button
+                onClick={scrollPrev}
+                disabled={!canPrev}
+                className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                onClick={scrollNext}
+                disabled={!canNext}
+                className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center hover:bg-primary hover:border-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="w-full overflow-hidden" ref={emblaRef}>
-        <div className="flex ml-4 md:ml-6 lg:ml-8 gap-6 touch-pan-y">
-          {motions.map((item, idx) => (
-            <motion.div 
-              key={idx}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="flex-[0_0_75%] sm:flex-[0_0_40%] md:flex-[0_0_25%] lg:flex-[0_0_20%] min-w-0"
-            >
-              <div className="flex flex-col gap-4">
-                <div className="relative rounded-2xl overflow-hidden aspect-[9/16] group cursor-pointer">
-                  <img src={item.img} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-                    <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:scale-110 group-hover:bg-primary/90 transition-all">
-                      <Play className="w-6 h-6 text-white fill-white ml-1" />
-                    </div>
-                  </div>
+      {/* Scrollable cards */}
+      <div className="w-full overflow-hidden pb-16" ref={emblaRef}>
+        <div className="flex gap-4 pl-4 md:pl-8">
+          {items.map((item: any, idx: number) => {
+            const ytId = hasVideos ? getYouTubeId(item.youtubeUrl) : null;
+            const isPlaying = playing === item.id;
+            const thumb = hasVideos
+              ? (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : null)
+              : item.img;
+
+            return (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.08 }}
+                className="flex-[0_0_72%] sm:flex-[0_0_44%] md:flex-[0_0_28%] lg:flex-[0_0_22%] xl:flex-[0_0_19%] min-w-0"
+                style={{ paddingBottom: idx % 2 === 0 ? "0px" : "40px", paddingTop: idx % 2 === 0 ? "40px" : "0px" }}
+              >
+                <div className="group relative rounded-3xl overflow-hidden aspect-[3/4] bg-[#1a2a1a] cursor-pointer shadow-xl">
+                  {isPlaying && ytId ? (
+                    <iframe
+                      src={`https://www.youtube.com/embed/${ytId}?autoplay=1`}
+                      className="w-full h-full"
+                      allowFullScreen
+                      allow="autoplay; encrypted-media"
+                      title={item.title}
+                    />
+                  ) : (
+                    <>
+                      {thumb && (
+                        <img
+                          src={thumb}
+                          alt={item.title}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      )}
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+                      {/* Play button — only for real videos */}
+                      {hasVideos && (
+                        <button
+                          onClick={() => setPlaying(item.id)}
+                          className="absolute inset-0 flex items-center justify-center"
+                        >
+                          <div className="w-14 h-14 rounded-full bg-white/15 backdrop-blur-md border border-white/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-primary transition-all duration-300 shadow-lg">
+                            <Play className="w-5 h-5 text-white fill-white ml-0.5" />
+                          </div>
+                        </button>
+                      )}
+
+                      {/* Title at bottom */}
+                      <div className="absolute bottom-0 left-0 right-0 p-5">
+                        <p className="text-white font-semibold text-sm leading-snug drop-shadow">{item.title}</p>
+                        {hasVideos && (
+                          <p className="text-white/50 text-xs mt-0.5">Tap to watch</p>
+                        )}
+                      </div>
+
+                      {/* Tag badge */}
+                      <div className="absolute top-4 left-4">
+                        <span className="bg-primary/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">
+                          {hasVideos ? "Video" : "Process"}
+                        </span>
+                      </div>
+                    </>
+                  )}
                 </div>
-                <div className="text-center">
-                  <h4 className="text-lg font-serif font-bold mb-3">{item.title}</h4>
-                  <Button variant="outline" className="w-full rounded-full border-background/20 hover:bg-primary hover:text-white hover:border-primary text-background bg-transparent">
-                    Enquiry Now
-                  </Button>
-                </div>
+              </motion.div>
+            );
+          })}
+
+          {/* CTA card at the end */}
+          <div
+            className="flex-[0_0_72%] sm:flex-[0_0_44%] md:flex-[0_0_28%] lg:flex-[0_0_22%] xl:flex-[0_0_19%] min-w-0 pr-4 md:pr-8"
+            style={{ paddingTop: items.length % 2 === 0 ? "0px" : "40px" }}
+          >
+            <div className="rounded-3xl aspect-[3/4] border border-white/10 bg-white/5 flex flex-col items-center justify-center text-center px-6 gap-5">
+              <div className="w-14 h-14 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center">
+                <FaLeaf className="w-6 h-6 text-primary" />
               </div>
-            </motion.div>
-          ))}
+              <div>
+                <p className="text-white font-serif font-bold text-xl mb-2">See More of Our Work</p>
+                <p className="text-white/50 text-sm">Explore our full product catalogue and manufacturing capabilities.</p>
+              </div>
+              <Link href="/products">
+                <button className="mt-2 border border-white/30 hover:border-primary hover:bg-primary text-white px-6 py-2.5 rounded-full text-sm font-semibold transition-all">
+                  View Products
+                </button>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -498,9 +615,11 @@ function KeyProductsSection() {
                     <span className="px-4 py-1.5 bg-primary/10 text-primary font-medium text-sm rounded-full">CAS: {product.casNumber}</span>
                   )}
                 </div>
-                <Button size="lg" className="rounded-full px-8 hover:shadow-lg transition-all">
-                  Learn More
-                </Button>
+                <Link href={`/products/${product.slug}`}>
+                  <Button size="lg" className="rounded-full px-8 hover:shadow-lg transition-all">
+                    Learn More
+                  </Button>
+                </Link>
               </div>
             </motion.div>
           ))}
@@ -556,6 +675,107 @@ function BlogSection() {
                 </Link>
               </div>
             </motion.article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const FALLBACK_TESTIMONIALS = [
+  {
+    id: "f1", name: "Dr. Rahul Mehta", designation: "R&D Head", company: "NutriVeda Labs",
+    rating: 5, message: "Pukhraj Herbals consistently delivers high-purity extracts that meet our stringent quality standards. Their Ashwagandha extract is the backbone of our bestselling product line."
+  },
+  {
+    id: "f2", name: "Sarah Thompson", designation: "Procurement Manager", company: "Botanica Global",
+    rating: 5, message: "We've sourced botanical extracts from multiple suppliers worldwide, and Pukhraj stands out for their GMP compliance, on-time delivery, and exceptional customer support."
+  },
+  {
+    id: "f3", name: "Arun Kapoor", designation: "CEO", company: "HerbWell Pharmaceuticals",
+    rating: 5, message: "The COA documentation and testing data provided with every batch gives us complete confidence in the traceability and purity of the ingredients."
+  },
+  {
+    id: "f4", name: "Priya Nair", designation: "Formulations Lead", company: "AyurPure Health",
+    rating: 5, message: "From Turmeric to Moringa, every extract we've ordered has been consistent in standardization and potency. A truly dependable manufacturing partner."
+  },
+];
+
+function TestimonialsSection() {
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
+  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+
+  useEffect(() => {
+    api.getTestimonials().then(data => setTestimonials(data && data.length > 0 ? data : FALLBACK_TESTIMONIALS)).catch(() => setTestimonials(FALLBACK_TESTIMONIALS));
+  }, []);
+
+  const displayed = testimonials.length > 0 ? testimonials : FALLBACK_TESTIMONIALS;
+
+  useEffect(() => {
+    if (!emblaApi || displayed.length === 0) return;
+    const interval = setInterval(() => emblaApi.scrollNext(), 5000);
+    return () => clearInterval(interval);
+  }, [emblaApi, displayed]);
+
+  return (
+    <section className="py-24 bg-muted/20">
+      <div className="container mx-auto px-4 md:px-6 mb-12">
+        <div className="flex items-end justify-between">
+          <div>
+            <h2 className="text-sm font-bold tracking-wider text-primary uppercase mb-2">What Our Clients Say</h2>
+            <h3 className="text-3xl md:text-4xl font-serif font-bold text-foreground">Customer Testimonials</h3>
+          </div>
+          <div className="hidden md:flex gap-3">
+            <button onClick={scrollPrev} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-colors">
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button onClick={scrollNext} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-colors">
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full overflow-hidden" ref={emblaRef}>
+        <div className="flex ml-4 md:ml-6 lg:ml-8 gap-6 touch-pan-y">
+          {displayed.map((t, idx) => (
+            <motion.div
+              key={t.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              className="flex-[0_0_90%] sm:flex-[0_0_50%] md:flex-[0_0_35%] lg:flex-[0_0_28%] min-w-0"
+            >
+              <div className="bg-card border border-border rounded-2xl p-8 h-full flex flex-col shadow-sm hover:shadow-lg transition-all duration-300">
+                {/* Stars */}
+                <div className="flex gap-1 mb-5">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <span key={i} className={`text-lg ${i < (t.rating || 5) ? "text-yellow-400" : "text-muted-foreground/30"}`}>★</span>
+                  ))}
+                </div>
+
+                {/* Quote */}
+                <p className="text-foreground/70 leading-relaxed mb-8 flex-1 italic">"{t.message}"</p>
+
+                {/* Author */}
+                <div className="flex items-center gap-4">
+                  {t.imageUrl ? (
+                    <img src={t.imageUrl} alt={t.name} className="w-12 h-12 rounded-full object-cover border-2 border-primary/20" />
+                  ) : (
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg shrink-0">
+                      {t.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <div>
+                    <div className="font-semibold text-foreground">{t.name}</div>
+                    <div className="text-xs text-muted-foreground">{[t.designation, t.company].filter(Boolean).join(" · ")}</div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>

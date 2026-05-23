@@ -1,4 +1,4 @@
-const BASE = "/api";
+const BASE = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/api`;
 
 function getToken() {
   return localStorage.getItem("admin_token");
@@ -27,6 +27,7 @@ export const api = {
 
   // Categories (public)
   getCategories: () => request<any[]>("GET", "/categories"),
+  getCategory: (slug: string) => request<any>("GET", `/categories/${slug}`),
   // Categories (admin)
   getAdminCategories: () => request<any[]>("GET", "/admin/categories"),
   createCategory: (data: any) => request<any>("POST", "/admin/categories", data),
@@ -35,6 +36,7 @@ export const api = {
 
   // Products (public)
   getProducts: (categoryId?: string) => request<any[]>("GET", `/products${categoryId ? `?categoryId=${categoryId}` : ""}`),
+  getProduct: (slug: string) => request<any>("GET", `/products/${slug}`),
   // Products (admin)
   getAdminProducts: () => request<any[]>("GET", "/admin/products"),
   createProduct: (data: any) => request<any>("POST", "/admin/products", data),
@@ -50,6 +52,14 @@ export const api = {
   updateBlog: (id: string, data: any) => request<any>("PUT", `/admin/blogs/${id}`, data),
   deleteBlog: (id: string) => request<any>("DELETE", `/admin/blogs/${id}`),
 
+  // Testimonials (public)
+  getTestimonials: () => request<any[]>("GET", "/testimonials"),
+  // Testimonials (admin)
+  getAdminTestimonials: () => request<any[]>("GET", "/admin/testimonials"),
+  createTestimonial: (data: any) => request<any>("POST", "/admin/testimonials", data),
+  updateTestimonial: (id: string, data: any) => request<any>("PUT", `/admin/testimonials/${id}`, data),
+  deleteTestimonial: (id: string) => request<any>("DELETE", `/admin/testimonials/${id}`),
+
   // Settings
   getSettings: () => request<Record<string, string>>("GET", "/settings"),
   updateSetting: (key: string, value: string) => request<any>("PUT", `/admin/settings/${key}`, { value }),
@@ -61,4 +71,30 @@ export const api = {
   getAdminEnquiries: () => request<any[]>("GET", "/admin/enquiries"),
   markEnquiryRead: (id: string) => request<any>("PUT", `/admin/enquiries/${id}/read`, {}),
   deleteEnquiry: (id: string) => request<any>("DELETE", `/admin/enquiries/${id}`),
+
+  // Hero Slides (public)
+  getHeroSlides: () => request<any[]>("GET", "/hero-slides"),
+  // Hero Slides (admin)
+  getAdminHeroSlides: () => request<any[]>("GET", "/admin/hero-slides"),
+  createHeroSlide: (data: any) => request<any>("POST", "/admin/hero-slides", data),
+  updateHeroSlide: (id: string, data: any) => request<any>("PUT", `/admin/hero-slides/${id}`, data),
+  deleteHeroSlide: (id: string) => request<any>("DELETE", `/admin/hero-slides/${id}`),
+
+  // Videos (public)
+  getVideos: () => request<any[]>("GET", "/videos"),
+  // Videos (admin)
+  getAdminVideos: () => request<any[]>("GET", "/admin/videos"),
+  createVideo: (data: any) => request<any>("POST", "/admin/videos", data),
+  updateVideo: (id: string, data: any) => request<any>("PUT", `/admin/videos/${id}`, data),
+  deleteVideo: (id: string) => request<any>("DELETE", `/admin/videos/${id}`),
+
+  // Visitors (admin)
+  getAdminVisitors: (params?: Record<string, string>) => {
+    const qs = params ? "?" + new URLSearchParams(params).toString() : "";
+    return request<any>("GET", `/admin/visitors${qs}`);
+  },
+  trackVisit: (data: { page: string; referrer?: string; sessionId?: string }) =>
+    request<any>("POST", "/visitors/track", data),
+  deleteOldVisitors: (days?: number) =>
+    request<any>("DELETE", `/admin/visitors${days ? `?days=${days}` : ""}`),
 };

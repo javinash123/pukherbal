@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Search, Menu, X } from "lucide-react";
 import { FaInstagram, FaLinkedinIn, FaFacebookF, FaTwitter } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "@assets/pukhraj_herbals_logo-removebg-preview_1775509460215.png";
+import logo from "@/assets/logo-new.png";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);

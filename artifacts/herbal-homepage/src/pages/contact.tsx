@@ -13,10 +13,10 @@ import hero3 from "@/assets/hero-3.png";
 const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.6, delay: i * 0.12 } }) };
 
 const contactInfo = [
-  { Icon: MapPin, title: "Head Office", lines: ["Pukhraj Herbals Pvt. Ltd.", "Plot No. 42, Industrial Estate", "Anand, Gujarat — 388001, India"] },
-  { Icon: Phone, title: "Call Us", lines: ["+91 98765 43210", "+91 99887 76654", "Mon–Sat: 9:00 AM – 6:00 PM IST"] },
-  { Icon: Mail, title: "Email Us", lines: ["enquiry@pukhrajherbals.com", "sales@pukhrajherbals.com", "quality@pukhrajherbals.com"] },
-  { Icon: Clock, title: "Business Hours", lines: ["Monday – Friday: 9 AM – 6 PM", "Saturday: 9 AM – 2 PM", "Sunday: Closed"] },
+  { Icon: MapPin, title: "Our Address", lines: ["15-16, Industrial Area,", "Mandsaur, Madhya Pradesh,", "India — 458002"] },
+  { Icon: Phone, title: "Call Us", lines: ["+91-9425105058", "Mon–Sat: 9:00 AM – 6:00 PM IST"] },
+  { Icon: Mail, title: "Email Us", lines: ["garlicoherbal@gmail.com"] },
+  { Icon: Clock, title: "Business Hours", lines: ["Monday – Saturday: 9 AM – 6 PM", "Sunday: Closed"] },
 ];
 
 const emptyForm = { name: "", email: "", company: "", phone: "", subject: "", message: "" };

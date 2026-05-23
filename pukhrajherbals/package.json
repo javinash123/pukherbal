@@ -1,0 +1,9 @@
+{
+  "name": "pukhrajherbals",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.cjs",
+  "scripts": {
+    "start": "node index.cjs"
+  }
+}

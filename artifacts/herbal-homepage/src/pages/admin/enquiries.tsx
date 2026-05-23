@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import AdminLayout from "./layout";
 import AdminGuard from "./guard";
 import { api } from "@/lib/api";
@@ -20,6 +20,8 @@ export default function AdminEnquiries() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selected, setSelected] = useState<Enquiry | null>(null);
+  const [search, setSearch] = useState("");
+  const [filterRead, setFilterRead] = useState<"" | "read" | "unread">("");
 
   const load = () => {
     api.getAdminEnquiries()
@@ -29,6 +31,23 @@ export default function AdminEnquiries() {
   };
 
   useEffect(() => { load(); }, []);
+
+  const filtered = useMemo(() => {
+    let list = enquiries;
+    if (filterRead === "read") list = list.filter(e => e.read);
+    if (filterRead === "unread") list = list.filter(e => !e.read);
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter(e =>
+        e.name.toLowerCase().includes(q) ||
+        e.email.toLowerCase().includes(q) ||
+        (e.company || "").toLowerCase().includes(q) ||
+        (e.subject || "").toLowerCase().includes(q) ||
+        e.message.toLowerCase().includes(q)
+      );
+    }
+    return list;
+  }, [enquiries, search, filterRead]);
 
   const handleView = async (enq: Enquiry) => {
     setSelected(enq);
@@ -57,9 +76,26 @@ export default function AdminEnquiries() {
         <div className="space-y-6">
           {error && <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg px-4 py-3 text-sm">{error}</div>}
 
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-500">
-              {enquiries.length} total enquiries
+          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+            <div className="flex items-center gap-3 flex-wrap">
+              <input
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 max-w-xs w-full"
+                placeholder="Search enquiries..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+              />
+              <select
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                value={filterRead}
+                onChange={e => setFilterRead(e.target.value as any)}
+              >
+                <option value="">All</option>
+                <option value="unread">Unread</option>
+                <option value="read">Read</option>
+              </select>
+            </div>
+            <p className="text-sm text-gray-500 whitespace-nowrap">
+              {filtered.length} shown
               {unreadCount > 0 && <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">{unreadCount} unread</span>}
             </p>
           </div>
@@ -69,11 +105,11 @@ export default function AdminEnquiries() {
             <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               {loading ? (
                 <div className="p-6 text-gray-400 text-sm">Loading...</div>
-              ) : enquiries.length === 0 ? (
-                <div className="p-8 text-center text-gray-400">No enquiries yet.</div>
+              ) : filtered.length === 0 ? (
+                <div className="p-8 text-center text-gray-400">{search || filterRead ? "No enquiries match your filters." : "No enquiries yet."}</div>
               ) : (
                 <div className="divide-y divide-gray-100">
-                  {enquiries.map((enq) => (
+                  {filtered.map((enq) => (
                     <div
                       key={enq.id}
                       className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${selected?.id === enq.id ? "bg-green-50 border-l-4 border-green-600" : ""}`}

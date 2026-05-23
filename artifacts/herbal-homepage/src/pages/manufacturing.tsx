@@ -9,21 +9,21 @@ import hero1 from "@/assets/hero-1.png";
 import aboutImg from "@/assets/about-image.png";
 
 const capabilities = [
-  { Icon: Thermometer, title: "Multi-Solvent Extraction", desc: "Water, ethanol, methanol, hexane, acetone and supercritical CO₂ extraction capabilities for every polarity class." },
-  { Icon: Zap, title: "Spray & Freeze Drying", desc: "Industrial spray dryers and freeze-drying chambers for converting liquid extracts to stable, flowable powders." },
-  { Icon: Microscope, title: "In-House QC Laboratory", desc: "HPLC, HPTLC, GC-MS, ICP-MS, and microbiology labs staffed by 40+ qualified analysts for full lot release testing." },
-  { Icon: BarChart2, title: "ERP-Driven Traceability", desc: "End-to-end digital batch documentation from raw material receipt to final dispatch, with full lot traceability." },
-  { Icon: Shield, title: "Validated Cleaning & Changeover", desc: "Validated equipment cleaning protocols and dedicated manufacturing suites for allergen and organic segregation." },
-  { Icon: CheckCircle2, title: "Cold Chain Storage", desc: "Temperature-controlled warehousing (2–8°C and 15–25°C) with 24/7 monitoring for sensitive botanical ingredients." },
+  { Icon: Thermometer, title: "Cold-Pressed Extraction", desc: "Mechanical cold-press extraction that preserves heat-sensitive bioactive compounds — no solvents, heat degradation, or harmful chemicals." },
+  { Icon: Zap, title: "Supercritical CO₂ Extraction", desc: "Advanced supercritical CO₂ technology for the cleanest, most concentrated extracts — no residues, superior potency, and longer shelf life." },
+  { Icon: Microscope, title: "Steam Distillation", desc: "Traditional steam distillation for essential oils and aromatic compounds, preserving the full therapeutic profile of each botanical." },
+  { Icon: BarChart2, title: "In-House R&D Laboratory", desc: "Dedicated R&D lab for custom formulations, private labeling, product development, and HPLC-based standardization testing." },
+  { Icon: Shield, title: "Rigorous Quality Control", desc: "Each batch is tested for heavy metals, pesticides, microbial contaminants, and potency — with COA and MSDS documentation available." },
+  { Icon: CheckCircle2, title: "Ultra-Hygienic Production", desc: "Advanced automation, temperature-controlled warehousing, and strict GMP-aligned protocols ensure batch-to-batch consistency and safety." },
 ];
 
 const specs = [
-  { label: "Total Manufacturing Area", value: "45,000 sq. ft." },
-  { label: "Extraction Capacity", value: "500 MT / year" },
-  { label: "Spray Drying Capacity", value: "2,000 kg / day" },
-  { label: "QC Analysts", value: "40+" },
-  { label: "Storage Capacity", value: "1,200 MT" },
-  { label: "Active SKUs in Production", value: "500+" },
+  { label: "Total Facility Area", value: "20,000 Sq. Mtr." },
+  { label: "Annual Extraction Capacity", value: "100+ MT" },
+  { label: "Annual Turnover", value: "₹5–25 Crore" },
+  { label: "Location", value: "Mandsaur, MP" },
+  { label: "Global Partners", value: "1000+" },
+  { label: "Export Countries", value: "20+" },
 ];
 
 export default function Manufacturing() {
@@ -33,7 +33,7 @@ export default function Manufacturing() {
       <main className="flex-1">
         <PageHero
           title="Manufacturing Facility"
-          subtitle="State-of-the-art GMP-certified extraction and processing facilities in Anand, Gujarat."
+          subtitle="20,000 sq. meter state-of-the-art facility in Mandsaur, Madhya Pradesh — India's Herbal Capital."
           image={hero1}
           breadcrumbs={[{ label: "Manufacturing Facility" }]}
           height="lg"
@@ -46,8 +46,8 @@ export default function Manufacturing() {
               <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="w-full lg:w-1/2">
                 <span className="text-sm font-bold tracking-wider text-primary uppercase">Our Facility</span>
                 <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mt-3 mb-6">Where Science Meets Nature</h2>
-                <p className="text-foreground/70 text-lg mb-5 leading-relaxed">Pukhraj Herbals operates two GMP and ISO 9001 certified manufacturing facilities located in Anand, Gujarat — India's heartland for pharmaceutical and botanical ingredient production.</p>
-                <p className="text-foreground/70 leading-relaxed mb-6">Together, our facilities span 45,000 square feet of manufacturing, laboratory, and warehouse space. Every area is designed to meet international regulatory requirements for cGMP (current Good Manufacturing Practice), supporting customers in regulated markets across the US, EU, and beyond.</p>
+                <p className="text-foreground/70 text-lg mb-5 leading-relaxed">Pukhraj Herbal operates a 20,000 sq. meter state-of-the-art facility in Mandsaur, Madhya Pradesh — widely recognized as India's Herbal Capital. Located in a clean, pollution-free environment with a naturally dry and pristine climate, our campus is ideal for preserving herbal quality.</p>
+                <p className="text-foreground/70 leading-relaxed mb-6">Our facility operates with ultra-hygienic production processes, advanced automation systems, and a dedicated in-house R&D laboratory. We ethically source raw herbs from our own cultivation fields or trusted local farmers, ensuring complete traceability, sustainability, and consistent quality.</p>
                 <Link href="/contact">
                   <Button size="lg" className="rounded-full px-8" data-testid="btn-visit-enquiry">
                     Enquire About a Facility Visit

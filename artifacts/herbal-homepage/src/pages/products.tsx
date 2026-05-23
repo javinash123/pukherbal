@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Search } from "lucide-react";
+import { Link } from "wouter";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
@@ -99,36 +100,38 @@ export default function Products() {
                         onHoverEnd={() => setHoveredIdx(null)}
                         className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-400 group cursor-pointer"
                       >
-                        <div className="relative aspect-square overflow-hidden bg-muted/30">
-                          <img
-                            src={product.imageUrl || FALLBACK_IMG}
-                            alt={product.name}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                          />
-                          <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: hoveredIdx === idx ? 1 : 0 }}
-                            className="absolute inset-0 bg-black/55 flex flex-col items-center justify-center gap-3 p-5"
-                          >
-                            <Button variant="secondary" className="w-full bg-white text-black hover:bg-primary hover:text-white rounded-full text-sm">
-                              Read More
-                            </Button>
-                            <Button className="w-full rounded-full text-sm">
-                              Enquiry Now
-                            </Button>
-                          </motion.div>
-                        </div>
-                        <div className="p-5">
-                          <div className="flex items-start justify-between gap-2 mb-2">
-                            <h3 className="font-serif font-bold text-foreground group-hover:text-primary transition-colors leading-tight">{product.name}</h3>
-                            {catName(product.categoryId) && (
-                              <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary whitespace-nowrap shrink-0">{catName(product.categoryId)}</span>
-                            )}
+                        <Link href={`/products/${product.slug}`} className="block">
+                          <div className="relative aspect-square overflow-hidden bg-muted/30">
+                            <img
+                              src={product.imageUrl || FALLBACK_IMG}
+                              alt={product.name}
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            />
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: hoveredIdx === idx ? 1 : 0 }}
+                              className="absolute inset-0 bg-black/55 flex flex-col items-center justify-center gap-3 p-5"
+                            >
+                              <span className="w-full text-center bg-white text-black rounded-full py-2 text-sm font-semibold">
+                                View Details
+                              </span>
+                              <span className="w-full text-center bg-primary text-white rounded-full py-2 text-sm font-semibold">
+                                Enquiry Now
+                              </span>
+                            </motion.div>
                           </div>
-                          {product.specification && <p className="text-xs text-muted-foreground mb-1">Spec: {product.specification}</p>}
-                          {product.casNumber && <p className="text-xs text-muted-foreground mb-1">CAS: {product.casNumber}</p>}
-                          <p className="text-sm text-foreground/60 line-clamp-2 mt-2">{product.description}</p>
-                        </div>
+                          <div className="p-5">
+                            <div className="flex items-start justify-between gap-2 mb-2">
+                              <h3 className="font-serif font-bold text-foreground group-hover:text-primary transition-colors leading-tight">{product.name}</h3>
+                              {catName(product.categoryId) && (
+                                <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary whitespace-nowrap shrink-0">{catName(product.categoryId)}</span>
+                              )}
+                            </div>
+                            {product.specification && <p className="text-xs text-muted-foreground mb-1">Spec: {product.specification}</p>}
+                            {product.casNumber && <p className="text-xs text-muted-foreground mb-1">CAS: {product.casNumber}</p>}
+                            <p className="text-sm text-foreground/60 line-clamp-2 mt-2">{product.description}</p>
+                          </div>
+                        </Link>
                       </motion.div>
                     ))}
                   </AnimatePresence>

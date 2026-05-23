@@ -41,10 +41,10 @@ router.get("/admin/blogs", authMiddleware, async (_req, res) => {
 // Admin: create
 router.post("/admin/blogs", authMiddleware, async (req, res) => {
   try {
-    const { title, excerpt, content, imageUrl, category, readTime, author, published = false, featured = false } = req.body;
+    const { title, excerpt, content, imageUrl, category, readTime, author, published = false, featured = false, seoTitle, seoDescription, seoKeywords } = req.body;
     if (!title) { res.status(400).json({ error: "Title is required" }); return; }
     const slug = slugify(title) + "-" + Date.now();
-    const post = await Blog.create({ title, slug, excerpt, content, imageUrl, category, readTime, author: author || "Pukhraj Herbals", published, featured });
+    const post = await Blog.create({ title, slug, excerpt, content, imageUrl, category, readTime, author: author || "Pukhraj Herbals", published, featured, seoTitle, seoDescription, seoKeywords });
     res.status(201).json(serialize(post));
   } catch { res.status(500).json({ error: "Internal server error" }); }
 });
@@ -53,7 +53,7 @@ router.post("/admin/blogs", authMiddleware, async (req, res) => {
 router.put("/admin/blogs/:id", authMiddleware, async (req, res) => {
   try {
     const updates: any = {};
-    const fields = ["title", "excerpt", "content", "imageUrl", "category", "readTime", "author", "published", "featured"];
+    const fields = ["title", "excerpt", "content", "imageUrl", "category", "readTime", "author", "published", "featured", "seoTitle", "seoDescription", "seoKeywords"];
     for (const f of fields) { if (req.body[f] !== undefined) updates[f] = req.body[f]; }
     const post = await Blog.findByIdAndUpdate(req.params.id, updates, { new: true });
     if (!post) { res.status(404).json({ error: "Not found" }); return; }
