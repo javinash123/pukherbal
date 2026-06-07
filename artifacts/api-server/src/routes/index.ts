@@ -5,12 +5,10 @@ import categoriesRouter from "./categories";
 import productsRouter from "./products";
 import blogsRouter from "./blogs";
 import settingsRouter from "./settings";
-import enquiriesRouter from "./enquiries";
-import testimonialsRouter from "./testimonials";
-import heroSlidesRouter from "./hero-slides";
-import videosRouter from "./videos";
-import visitorsRouter from "./visitors";
 import uploadRouter from "./upload";
+import enquiriesRouter from "./enquiries";
+import heroSlidesRouter from "./hero-slides";
+import videoItemsRouter from "./video-items";
 
 const router: IRouter = Router();
 
@@ -22,9 +20,7 @@ router.use(productsRouter);
 router.use(blogsRouter);
 router.use(settingsRouter);
 router.use(enquiriesRouter);
-router.use(testimonialsRouter);
 router.use(heroSlidesRouter);
-router.use(videosRouter);
-router.use(visitorsRouter);
+router.use(videoItemsRouter);
 
 export default router;

@@ -1,206 +1,200 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import AdminLayout from "./layout";
 import AdminGuard from "./guard";
 import { api } from "@/lib/api";
 
 interface Enquiry {
-  id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  company?: string;
-  subject?: string;
-  message: string;
-  read: boolean;
-  createdAt: string;
+  id: string; name: string; email: string; company?: string; phone?: string;
+  productOfInterest?: string; message: string; status: string; createdAt: string;
 }
+
+const STATUS_COLORS: Record<string, string> = {
+  new: "bg-blue-100 text-blue-700",
+  read: "bg-gray-100 text-gray-600",
+  replied: "bg-green-100 text-green-700",
+};
 
 export default function AdminEnquiries() {
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [filter, setFilter] = useState("");
   const [selected, setSelected] = useState<Enquiry | null>(null);
-  const [search, setSearch] = useState("");
-  const [filterRead, setFilterRead] = useState<"" | "read" | "unread">("");
+  const [updating, setUpdating] = useState<string | null>(null);
 
-  const load = () => {
-    api.getAdminEnquiries()
+  const load = (status?: string) => {
+    setLoading(true);
+    api.getAdminEnquiries(status || undefined)
       .then(setEnquiries)
       .catch(() => setError("Failed to load enquiries"))
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(filter || undefined); }, [filter]);
 
-  const filtered = useMemo(() => {
-    let list = enquiries;
-    if (filterRead === "read") list = list.filter(e => e.read);
-    if (filterRead === "unread") list = list.filter(e => !e.read);
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      list = list.filter(e =>
-        e.name.toLowerCase().includes(q) ||
-        e.email.toLowerCase().includes(q) ||
-        (e.company || "").toLowerCase().includes(q) ||
-        (e.subject || "").toLowerCase().includes(q) ||
-        e.message.toLowerCase().includes(q)
-      );
-    }
-    return list;
-  }, [enquiries, search, filterRead]);
-
-  const handleView = async (enq: Enquiry) => {
-    setSelected(enq);
-    if (!enq.read) {
-      try {
-        await api.markEnquiryRead(enq.id);
-        setEnquiries(prev => prev.map(e => e.id === enq.id ? { ...e, read: true } : e));
-      } catch {}
-    }
+  const markStatus = async (id: string, status: string) => {
+    setUpdating(id);
+    try {
+      await api.updateEnquiry(id, { status });
+      setEnquiries(prev => prev.map(e => e.id === id ? { ...e, status } : e));
+      if (selected?.id === id) setSelected(prev => prev ? { ...prev, status } : null);
+    } catch { setError("Failed to update status"); }
+    finally { setUpdating(null); }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Delete this enquiry?")) return;
+    if (!confirm("Delete this enquiry permanently?")) return;
     try {
       await api.deleteEnquiry(id);
+      setEnquiries(prev => prev.filter(e => e.id !== id));
       if (selected?.id === id) setSelected(null);
-      load();
-    } catch (err: any) { setError(err.message); }
+    } catch { setError("Failed to delete"); }
   };
 
-  const unreadCount = enquiries.filter(e => !e.read).length;
+  const counts = { all: enquiries.length, new: enquiries.filter(e => e.status === "new").length };
 
   return (
     <AdminGuard>
       <AdminLayout title="Enquiries">
-        <div className="space-y-6">
+        <div className="space-y-5">
           {error && <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg px-4 py-3 text-sm">{error}</div>}
 
-          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-            <div className="flex items-center gap-3 flex-wrap">
-              <input
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 max-w-xs w-full"
-                placeholder="Search enquiries..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-              />
-              <select
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                value={filterRead}
-                onChange={e => setFilterRead(e.target.value as any)}
+          {/* Filter tabs */}
+          <div className="flex items-center gap-2 flex-wrap">
+            {[
+              { label: "All", value: "" },
+              { label: "New", value: "new" },
+              { label: "Read", value: "read" },
+              { label: "Replied", value: "replied" },
+            ].map(({ label, value }) => (
+              <button
+                key={value}
+                onClick={() => setFilter(value)}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${filter === value ? "bg-green-700 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
               >
-                <option value="">All</option>
-                <option value="unread">Unread</option>
-                <option value="read">Read</option>
-              </select>
-            </div>
-            <p className="text-sm text-gray-500 whitespace-nowrap">
-              {filtered.length} shown
-              {unreadCount > 0 && <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">{unreadCount} unread</span>}
-            </p>
+                {label} {value === "" && `(${counts.all})`}
+                {value === "new" && counts.new > 0 && (
+                  <span className="ml-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">{counts.new}</span>
+                )}
+              </button>
+            ))}
           </div>
 
-          <div className="flex gap-6">
-            {/* Enquiry list */}
-            <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            {/* List */}
+            <div className="lg:col-span-1 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               {loading ? (
                 <div className="p-6 text-gray-400 text-sm">Loading...</div>
-              ) : filtered.length === 0 ? (
-                <div className="p-8 text-center text-gray-400">{search || filterRead ? "No enquiries match your filters." : "No enquiries yet."}</div>
+              ) : enquiries.length === 0 ? (
+                <div className="p-8 text-center text-gray-400 text-sm">No enquiries found.</div>
               ) : (
                 <div className="divide-y divide-gray-100">
-                  {filtered.map((enq) => (
+                  {enquiries.map((e) => (
                     <div
-                      key={enq.id}
-                      className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${selected?.id === enq.id ? "bg-green-50 border-l-4 border-green-600" : ""}`}
-                      onClick={() => handleView(enq)}
+                      key={e.id}
+                      onClick={() => setSelected(e)}
+                      className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${selected?.id === e.id ? "bg-green-50 border-l-2 border-green-600" : ""}`}
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            {!enq.read && <span className="w-2 h-2 rounded-full bg-green-600 flex-shrink-0" />}
-                            <span className={`font-medium text-sm ${enq.read ? "text-gray-700" : "text-gray-900"}`}>{enq.name}</span>
-                            {enq.company && <span className="text-xs text-gray-400">· {enq.company}</span>}
-                          </div>
-                          <div className="text-xs text-gray-500 mt-0.5">{enq.email}</div>
-                          {enq.subject && <div className="text-sm text-gray-600 mt-1 truncate">{enq.subject}</div>}
-                          <div className="text-xs text-gray-400 mt-1 line-clamp-2">{enq.message}</div>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="font-medium text-sm text-gray-800 truncate">{e.name}</div>
+                          <div className="text-xs text-gray-500 truncate">{e.email}</div>
+                          {e.productOfInterest && (
+                            <div className="text-xs text-gray-400 truncate mt-0.5">🌿 {e.productOfInterest}</div>
+                          )}
                         </div>
-                        <div className="flex-shrink-0 text-right">
-                          <div className="text-xs text-gray-400">{new Date(enq.createdAt).toLocaleDateString()}</div>
-                          <button
-                            onClick={(e) => { e.stopPropagation(); handleDelete(enq.id); }}
-                            className="text-xs text-red-500 hover:text-red-700 mt-2"
-                          >
-                            Delete
-                          </button>
+                        <div className="flex flex-col items-end gap-1 shrink-0">
+                          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_COLORS[e.status] || STATUS_COLORS.read}`}>
+                            {e.status}
+                          </span>
+                          <span className="text-xs text-gray-400">
+                            {new Date(e.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
+                          </span>
                         </div>
                       </div>
+                      <p className="text-xs text-gray-500 mt-1.5 line-clamp-2">{e.message}</p>
                     </div>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Detail panel */}
-            {selected && (
-              <div className="w-96 bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col gap-4 self-start sticky top-0">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-gray-800">Enquiry Details</h3>
-                  <button onClick={() => setSelected(null)} className="text-gray-400 hover:text-gray-600 text-lg leading-none">&times;</button>
+            {/* Detail */}
+            <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              {!selected ? (
+                <div className="flex items-center justify-center h-40 text-gray-400 text-sm">
+                  Select an enquiry to view details
                 </div>
-                <div className="space-y-3 text-sm">
-                  <div>
-                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-0.5">From</div>
-                    <div className="text-gray-800 font-medium">{selected.name}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-0.5">Email</div>
-                    <a href={`mailto:${selected.email}`} className="text-green-700 hover:underline">{selected.email}</a>
-                  </div>
-                  {selected.phone && (
+              ) : (
+                <div className="space-y-5">
+                  <div className="flex items-start justify-between">
                     <div>
-                      <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-0.5">Phone</div>
-                      <div className="text-gray-800">{selected.phone}</div>
+                      <h3 className="text-lg font-semibold text-gray-800">{selected.name}</h3>
+                      <div className="text-sm text-gray-500 mt-0.5">{selected.email}</div>
                     </div>
-                  )}
-                  {selected.company && (
-                    <div>
-                      <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-0.5">Company</div>
-                      <div className="text-gray-800">{selected.company}</div>
-                    </div>
-                  )}
-                  {selected.subject && (
-                    <div>
-                      <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-0.5">Subject</div>
-                      <div className="text-gray-800">{selected.subject}</div>
-                    </div>
-                  )}
-                  <div>
-                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-0.5">Message</div>
-                    <div className="text-gray-800 whitespace-pre-wrap leading-relaxed">{selected.message}</div>
+                    <span className={`text-xs font-semibold px-3 py-1 rounded-full ${STATUS_COLORS[selected.status] || STATUS_COLORS.read}`}>
+                      {selected.status}
+                    </span>
                   </div>
+
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    {selected.company && (
+                      <div><span className="text-gray-500">Company:</span> <span className="font-medium">{selected.company}</span></div>
+                    )}
+                    {selected.phone && (
+                      <div><span className="text-gray-500">Phone:</span> <span className="font-medium">{selected.phone}</span></div>
+                    )}
+                    {selected.productOfInterest && (
+                      <div className="col-span-2"><span className="text-gray-500">Product of Interest:</span> <span className="font-medium">{selected.productOfInterest}</span></div>
+                    )}
+                    <div className="col-span-2">
+                      <span className="text-gray-500">Received:</span>{" "}
+                      <span className="font-medium">{new Date(selected.createdAt).toLocaleString("en-IN")}</span>
+                    </div>
+                  </div>
+
                   <div>
-                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-0.5">Received</div>
-                    <div className="text-gray-600">{new Date(selected.createdAt).toLocaleString()}</div>
+                    <div className="text-sm font-medium text-gray-700 mb-2">Message:</div>
+                    <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-wrap border border-gray-200">
+                      {selected.message}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
+                    {selected.status !== "read" && (
+                      <button
+                        onClick={() => markStatus(selected.id, "read")}
+                        disabled={updating === selected.id}
+                        className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+                      >
+                        Mark as Read
+                      </button>
+                    )}
+                    {selected.status !== "replied" && (
+                      <button
+                        onClick={() => markStatus(selected.id, "replied")}
+                        disabled={updating === selected.id}
+                        className="bg-green-100 hover:bg-green-200 text-green-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+                      >
+                        Mark as Replied
+                      </button>
+                    )}
+                    <a
+                      href={`mailto:${selected.email}?subject=Re: Your Enquiry at Pukhraj Herbals`}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    >
+                      Reply via Email
+                    </a>
+                    <button
+                      onClick={() => handleDelete(selected.id)}
+                      className="ml-auto bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
-                <div className="flex gap-2 pt-2 border-t border-gray-100">
-                  <a
-                    href={`mailto:${selected.email}?subject=Re: ${selected.subject || "Your enquiry"}`}
-                    className="flex-1 text-center bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                  >
-                    Reply via Email
-                  </a>
-                  <button
-                    onClick={() => handleDelete(selected.id)}
-                    className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-sm font-medium transition-colors"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </AdminLayout>

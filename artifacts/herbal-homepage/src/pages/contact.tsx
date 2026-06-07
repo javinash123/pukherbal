@@ -1,6 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle2 } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
@@ -8,35 +8,48 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/lib/api";
+import { useSettings } from "@/lib/settings";
+import { useSEO } from "@/hooks/useSEO";
 import hero3 from "@/assets/hero-3.png";
 
 const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.6, delay: i * 0.12 } }) };
 
-const contactInfo = [
-  { Icon: MapPin, title: "Our Address", lines: ["15-16, Industrial Area,", "Mandsaur, Madhya Pradesh,", "India — 458002"] },
-  { Icon: Phone, title: "Call Us", lines: ["+91-9425105058", "Mon–Sat: 9:00 AM – 6:00 PM IST"] },
-  { Icon: Mail, title: "Email Us", lines: ["garlicoherbal@gmail.com"] },
-  { Icon: Clock, title: "Business Hours", lines: ["Monday – Saturday: 9 AM – 6 PM", "Sunday: Closed"] },
-];
-
-const emptyForm = { name: "", email: "", company: "", phone: "", subject: "", message: "" };
-
 export default function Contact() {
-  const [form, setForm] = useState(emptyForm);
+  const settings = useSettings();
+  useSEO({
+    title: "Contact Us",
+    description: settings["seo_meta_description"] || "Reach out to Pukhraj Herbals for samples, quotes, or any enquiries about our herbal extracts.",
+    keywords: settings["seo_meta_keywords"],
+  });
+
+  const phone = settings["contact_phone"] || "+91 98765 43210";
+  const email = settings["contact_email"] || "enquiry@pukhrajherbals.com";
+  const salesEmail = settings["contact_sales_email"] || "sales@pukhrajherbals.com";
+  const address = settings["contact_address"] || "Indore, Madhya Pradesh, India";
+
+  const contactInfo = [
+    { Icon: MapPin, title: "Head Office", lines: ["Pukhraj Herbals Pvt. Ltd.", address] },
+    { Icon: Phone, title: "Call Us", lines: [phone, "Mon–Sat: 9:00 AM – 6:00 PM IST"] },
+    { Icon: Mail, title: "Email Us", lines: [email, salesEmail] },
+    { Icon: Clock, title: "Business Hours", lines: ["Monday – Friday: 9 AM – 6 PM", "Saturday: 9 AM – 2 PM", "Sunday: Closed"] },
+  ];
+
+  const [form, setForm] = useState({ name: "", email: "", company: "", phone: "", productOfInterest: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [formError, setFormError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form.name || !form.email || !form.message) { setFormError("Please fill in Name, Email, and Message."); return; }
     setSubmitting(true);
-    setError("");
+    setFormError("");
     try {
-      await api.submitEnquiry(form);
-      setSubmitted(true);
-      setForm(emptyForm);
+      await api.createEnquiry(form);
+      setSuccess(true);
+      setForm({ name: "", email: "", company: "", phone: "", productOfInterest: "", message: "" });
     } catch (err: any) {
-      setError(err.message || "Failed to send message. Please try again.");
+      setFormError(err.message || "Failed to submit. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -82,49 +95,45 @@ export default function Contact() {
                 <span className="text-sm font-bold tracking-wider text-primary uppercase">Send a Message</span>
                 <h2 className="text-3xl font-serif font-bold text-foreground mt-2 mb-8">We'd Love to Hear From You</h2>
 
-                {submitted ? (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="bg-green-50 border border-green-200 rounded-2xl p-10 text-center"
-                  >
-                    <CheckCircle2 className="w-16 h-16 text-green-600 mx-auto mb-4" />
-                    <h3 className="text-xl font-serif font-bold text-green-800 mb-2">Thank You!</h3>
-                    <p className="text-green-700 mb-6">Your enquiry has been received. Our team will get back to you within 24 hours.</p>
-                    <Button onClick={() => setSubmitted(false)} variant="outline" className="rounded-full">
-                      Send Another Message
-                    </Button>
+                {success ? (
+                  <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-green-50 border border-green-200 rounded-2xl p-10 text-center">
+                    <CheckCircle className="w-14 h-14 text-green-600 mx-auto mb-4" />
+                    <h3 className="text-xl font-serif font-bold text-green-800 mb-2">Enquiry Submitted!</h3>
+                    <p className="text-green-700 mb-6">Thank you for reaching out. Our team will get back to you within 1–2 business days.</p>
+                    <Button variant="outline" onClick={() => setSuccess(false)}>Send Another Message</Button>
                   </motion.div>
                 ) : (
                   <form className="space-y-5" onSubmit={handleSubmit}>
-                    {error && <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 text-sm">{error}</div>}
+                    {formError && (
+                      <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm">{formError}</div>
+                    )}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div className="space-y-2">
                         <label className="text-sm font-semibold text-foreground">Full Name *</label>
-                        <Input required placeholder="Your full name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="h-12 rounded-xl bg-muted/50 border-transparent focus:border-primary" />
+                        <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Your full name" className="h-12 rounded-xl bg-muted/50 border-transparent focus:border-primary" />
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-semibold text-foreground">Email Address *</label>
-                        <Input required type="email" placeholder="you@company.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className="h-12 rounded-xl bg-muted/50 border-transparent focus:border-primary" />
+                        <Input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} placeholder="you@company.com" className="h-12 rounded-xl bg-muted/50 border-transparent focus:border-primary" />
                       </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div className="space-y-2">
                         <label className="text-sm font-semibold text-foreground">Company Name</label>
-                        <Input placeholder="Your company" value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} className="h-12 rounded-xl bg-muted/50 border-transparent focus:border-primary" />
+                        <Input value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} placeholder="Your company" className="h-12 rounded-xl bg-muted/50 border-transparent focus:border-primary" />
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-semibold text-foreground">Phone Number</label>
-                        <Input placeholder="+91 98765 43210" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} className="h-12 rounded-xl bg-muted/50 border-transparent focus:border-primary" />
+                        <Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="+91 98765 43210" className="h-12 rounded-xl bg-muted/50 border-transparent focus:border-primary" />
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-semibold text-foreground">Subject / Product of Interest</label>
-                      <Input placeholder="e.g. Ashwagandha Extract inquiry, Custom formulation..." value={form.subject} onChange={e => setForm(f => ({ ...f, subject: e.target.value }))} className="h-12 rounded-xl bg-muted/50 border-transparent focus:border-primary" />
+                      <label className="text-sm font-semibold text-foreground">Product of Interest</label>
+                      <Input value={form.productOfInterest} onChange={e => setForm(f => ({ ...f, productOfInterest: e.target.value }))} placeholder="e.g. Ashwagandha Extract, Turmeric Powder..." className="h-12 rounded-xl bg-muted/50 border-transparent focus:border-primary" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-semibold text-foreground">Message *</label>
-                      <Textarea required placeholder="Please provide details about your requirements, quantities, or any questions you have..." value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} className="min-h-[150px] rounded-xl bg-muted/50 border-transparent focus:border-primary resize-none" />
+                      <Textarea value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} placeholder="Please provide details about your requirements, quantities, or any questions you have..." className="min-h-[150px] rounded-xl bg-muted/50 border-transparent focus:border-primary resize-none" />
                     </div>
                     <Button type="submit" size="lg" disabled={submitting} className="w-full h-13 rounded-xl text-base font-semibold shadow-md hover:shadow-xl transition-all">
                       <Send className="mr-2 w-4 h-4" /> {submitting ? "Sending..." : "Send Enquiry"}
@@ -151,9 +160,9 @@ export default function Contact() {
                   <h3 className="font-serif font-bold text-xl mb-3">Pukhraj Herbals Pvt. Ltd.</h3>
                   <p className="text-primary-foreground/80 text-sm mb-5 leading-relaxed">GMP & ISO certified manufacturer of premium botanical extracts, powders, and oils. Trusted by 500+ manufacturers in 30+ countries.</p>
                   <div className="space-y-3 text-sm">
-                    <div className="flex items-center gap-3"><Phone className="w-4 h-4 shrink-0" /><span>+91 98765 43210</span></div>
-                    <div className="flex items-center gap-3"><Mail className="w-4 h-4 shrink-0" /><span>enquiry@pukhrajherbals.com</span></div>
-                    <div className="flex items-start gap-3"><MapPin className="w-4 h-4 shrink-0 mt-0.5" /><span>Anand, Gujarat, India — 388001</span></div>
+                    <div className="flex items-center gap-3"><Phone className="w-4 h-4 shrink-0" /><span>{phone}</span></div>
+                    <div className="flex items-center gap-3"><Mail className="w-4 h-4 shrink-0" /><span>{email}</span></div>
+                    <div className="flex items-start gap-3"><MapPin className="w-4 h-4 shrink-0 mt-0.5" /><span>{address}</span></div>
                   </div>
                 </div>
               </motion.div>

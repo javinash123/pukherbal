@@ -7,12 +7,12 @@ import hero2 from "@/assets/hero-2.png";
 import aboutImg from "@/assets/about-image.png";
 
 const pillars = [
-  { Icon: Leaf, title: "Ethical Herb Sourcing", desc: "We ethically source raw herbs from our own cultivation fields or trusted local farmers in Mandsaur and surrounding regions — ensuring complete traceability and consistent quality from seed to shelf.", stat: "100%", statLabel: "Traceable Sourcing" },
-  { Icon: Droplets, title: "Pollution-Free Campus", desc: "Our 20,000 sq. meter facility is located in a clean, pollution-free environment with a naturally dry and pristine climate — ideal for preserving the natural integrity of herbs throughout the manufacturing process.", stat: "20,000", statLabel: "Sq. Mtr. Campus" },
-  { Icon: Sun, title: "Chemical-Free Processing", desc: "We use cold-pressed extraction, supercritical CO₂, and steam distillation — methods that preserve maximum bioactive compounds without solvents, heat degradation, or harmful chemicals.", stat: "Zero", statLabel: "Solvent Residues" },
-  { Icon: Recycle, title: "Sustainable Agriculture", desc: "Our farming partnerships prioritize natural and regenerative practices. We work with farmers who avoid synthetic pesticides and fertilizers, supporting a healthier ecosystem and better herbal quality.", stat: "Natural", statLabel: "Farming Practices" },
-  { Icon: Users, title: "Community & Farmer Partnership", desc: "We support farmers in Madhya Pradesh with fair pricing, technical knowledge, and long-term partnerships — contributing to rural livelihoods and promoting India's herbal agricultural heritage.", stat: "Local", statLabel: "Farmer Network" },
-  { Icon: Globe, title: "Global Wellness Mission", desc: "With exports to 20+ countries and 1000+ global partners, we bring the natural goodness of Mandsaur's herbs to the world — supporting holistic health, natural beauty, and sustainable wellness globally.", stat: "20+", statLabel: "Export Countries" },
+  { Icon: Leaf, title: "Sustainable Sourcing", desc: "We partner with 150+ contracted farmers across India who practice organic, regenerative agriculture. Wild-harvesting is minimized and strictly regulated to prevent over-extraction of plant populations.", stat: "150+", statLabel: "Farmer Partners" },
+  { Icon: Droplets, title: "Water Conservation", desc: "Our zero-liquid-discharge manufacturing facilities recycle all process water. We've reduced freshwater consumption per kg of extract by 60% over the past decade through closed-loop systems.", stat: "60%", statLabel: "Water Use Reduction" },
+  { Icon: Sun, title: "Renewable Energy", desc: "40% of our total energy consumption now comes from rooftop solar installations at both our manufacturing facilities. We are committed to 100% renewable energy by 2030.", stat: "40%", statLabel: "Renewable Energy" },
+  { Icon: Recycle, title: "Zero Waste Manufacturing", desc: "Spent plant biomass is composted and returned to our farm partners as organic fertilizer. Packaging waste is minimized through concentrated formats and recyclable materials.", stat: "Zero", statLabel: "Landfill Waste" },
+  { Icon: Users, title: "Community Empowerment", desc: "We employ and train over 500 people in rural farming communities, with a focus on women's employment. Our Fair Trade pricing model ensures farmers receive above-market rates.", stat: "500+", statLabel: "Rural Livelihoods" },
+  { Icon: Globe, title: "Biodiversity Protection", desc: "We support conservation programs for 12 endangered medicinal plant species through seed banks, habitat protection grants, and cultivation research partnerships with Indian universities.", stat: "12", statLabel: "Species Protected" },
 ];
 
 export default function Sustainability() {
@@ -40,8 +40,8 @@ export default function Sustainability() {
               <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="w-full lg:w-3/5">
                 <span className="text-sm font-bold tracking-wider text-primary uppercase">Our Philosophy</span>
                 <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mt-3 mb-6">Nature Gives. We Give Back.</h2>
-                <p className="text-foreground/70 text-lg mb-5 leading-relaxed">Every botanical extract we produce begins with a plant — grown in the fertile fields of Mandsaur, Madhya Pradesh, nourished by the region's naturally dry and pristine climate. We believe that using nature's gifts carries an inherent responsibility to protect and replenish what we take.</p>
-                <p className="text-foreground/70 leading-relaxed">Our commitment to sustainability spans the entire value chain — from ethically sourcing herbs from our own cultivation fields and trusted local farmers, to chemical-free extraction using cold-pressed, supercritical CO₂, and steam distillation methods, to building long-term partnerships with farming communities in Madhya Pradesh. We measure our progress in the quality of our extracts, the health of the ecosystems, and the livelihoods we support.</p>
+                <p className="text-foreground/70 text-lg mb-5 leading-relaxed">Every botanical extract we produce begins with a plant — grown in soil, nourished by rain, cultivated by human hands. We believe that using nature's gifts carries an inherent responsibility to protect and replenish what we take.</p>
+                <p className="text-foreground/70 leading-relaxed">Our sustainability strategy covers the entire value chain: from regenerative farming and water-conserving extraction to fair wages for rural workers and protection of endangered plant species. We measure our progress not just in revenue, but in the health of the ecosystems and communities that make our work possible.</p>
               </motion.div>
             </div>
           </div>

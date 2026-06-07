@@ -9,26 +9,26 @@ import hero2 from "@/assets/hero-2.png";
 const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.6, delay: i * 0.1 } }) };
 
 const values = [
-  { Icon: Leaf, title: "Purity First", desc: "Every extract begins with carefully sourced, authenticated raw botanicals — ethically sourced from our own cultivation fields or trusted local farmers." },
-  { Icon: Award, title: "Quality Assured", desc: "ISO 9001:2008 certified processes with in-house R&D laboratory and rigorous testing at every stage from raw material to final product." },
-  { Icon: Globe, title: "Global Reach", desc: "Trusted by 1000+ partners across 20+ countries in pharma, nutraceutical, cosmetic, food, and wellness industries." },
-  { Icon: Users, title: "Expert Team", desc: "Led by Mr. Milind Jilhewar with 30+ years of industry expertise, our team delivers customized solutions for every client need." },
+  { Icon: Leaf, title: "Purity First", desc: "Every extract begins with carefully sourced, authenticated raw botanicals. No shortcuts, no compromise." },
+  { Icon: Award, title: "Quality Assured", desc: "GMP and ISO certified processes with in-house testing at every stage from raw material to final product." },
+  { Icon: Globe, title: "Global Reach", desc: "Trusted by manufacturers in 30+ countries across pharma, nutraceutical, and cosmetic industries." },
+  { Icon: Users, title: "Expert Team", desc: "Our botanists, chemists and QA professionals bring decades of combined experience in plant science." },
 ];
 
 const timeline = [
-  { year: "1999", event: "Founded in Mandsaur, Madhya Pradesh — India's Herbal Capital — under the visionary leadership of Mr. Milind Jilhewar." },
-  { year: "2005", event: "Expanded facility to 20,000 sq. meter pollution-free campus. Introduced supercritical CO₂ extraction technology." },
-  { year: "2010", event: "Achieved ISO 9001:2008 certification. Built in-house R&D laboratory for custom formulations and standardized extracts." },
-  { year: "2015", event: "Entered 15+ export markets. Launched private labeling and bulk supply services for global nutraceutical brands." },
-  { year: "2020", event: "Reached 1000+ global partners. Expanded product range to include nutraceutical extracts, CO₂ oils, and cattle/poultry feed ingredients." },
-  { year: "2024", event: "100+ MT annual capacity. Exporting to 20+ countries. Recognized as a leading name in India's herbal manufacturing sector." },
+  { year: "1998", event: "Founded by Dr. Ramesh Patel with a single extraction unit in Gujarat, India." },
+  { year: "2004", event: "Achieved GMP certification. Expanded product portfolio to 100+ botanical extracts." },
+  { year: "2009", event: "ISO 9001 certified. Opened second state-of-the-art facility with modern equipment." },
+  { year: "2014", event: "Received USDA Organic and Halal certifications. Entered European markets." },
+  { year: "2019", event: "Launched R&D division for novel standardized extracts. Exports to 25+ countries." },
+  { year: "2024", event: "Expanded to 500+ products. Present in 30+ countries. Leading name in botanical excellence." },
 ];
 
 const stats = [
-  { value: "1999", label: "Year Established" },
-  { value: "100+", label: "MT Annual Capacity" },
-  { value: "20+", label: "Export Countries" },
-  { value: "1000+", label: "Global Partners" },
+  { value: "25+", label: "Years of Excellence" },
+  { value: "500+", label: "Products" },
+  { value: "30+", label: "Export Countries" },
+  { value: "98%", label: "Client Retention" },
 ];
 
 export default function About() {
@@ -37,8 +37,8 @@ export default function About() {
       <Navbar />
       <main className="flex-1">
         <PageHero
-          title="About Pukhraj Herbal"
-          subtitle="Founded in 1999 in Mandsaur, Madhya Pradesh — India's Herbal Capital — where ancient Ayurvedic wisdom meets modern extraction science."
+          title="About Pukhraj Herbals"
+          subtitle="25 years of botanical excellence — where ancient Ayurvedic wisdom meets modern extraction science."
           image={hero2}
           breadcrumbs={[{ label: "About Us" }]}
         />
@@ -66,17 +66,17 @@ export default function About() {
                   <img src={aboutImg} alt="Pukhraj Herbals Lab" className="w-full h-full object-cover" />
                   <div className="absolute bottom-8 -right-6 bg-card p-6 rounded-xl shadow-xl border border-border max-w-xs">
                     <CheckCircle2 className="w-8 h-8 text-primary mb-2" />
-                    <p className="font-serif font-bold text-lg">ISO 9001:2008 Certified</p>
-                    <p className="text-muted-foreground text-sm">Maintaining global quality standards since 2010</p>
+                    <p className="font-serif font-bold text-lg">GMP & ISO Certified</p>
+                    <p className="text-muted-foreground text-sm">Meeting global quality standards since 2004</p>
                   </div>
                 </div>
               </motion.div>
               <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="w-full lg:w-1/2">
                 <span className="text-sm font-bold tracking-wider text-primary uppercase">Our Story</span>
                 <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mt-3 mb-6 leading-tight">Bridging Ancient Tradition & Modern Science</h2>
-                <p className="text-foreground/70 text-lg mb-5 leading-relaxed">Founded in 1999 by Mr. Milind Jilhewar, Pukhraj Herbal is a premier herbal products manufacturer located in Mandsaur, Madhya Pradesh — a region widely recognized as the Herbal Capital of India due to its rich agricultural heritage and premium natural produce.</p>
-                <p className="text-foreground/70 mb-5 leading-relaxed">Our operations span a 20,000 sq. meter pollution-free campus in a naturally dry and pristine climate, ideal for preserving herbal quality. We are dedicated to harnessing the purest essence of nature by combining ancient Ayurvedic wisdom with modern extraction technology.</p>
-                <p className="text-foreground/70 leading-relaxed">With 1000+ global partners across 20+ countries and an annual capacity of 100+ MT, Pukhraj Herbal delivers customized solutions across nutraceutical, pharmaceutical, cosmetic, food, and wellness industries.</p>
+                <p className="text-foreground/70 text-lg mb-5 leading-relaxed">Founded in 1998, Pukhraj Herbals began as a humble extraction unit with a singular vision: to make the healing power of Ayurvedic plants accessible to the world through scientifically validated, standardized extracts.</p>
+                <p className="text-foreground/70 mb-5 leading-relaxed">Today, we operate two GMP-certified manufacturing facilities equipped with cutting-edge extraction, purification, and analysis technologies. Our team of over 200 scientists, botanists, and quality professionals ensures every batch meets the highest standards.</p>
+                <p className="text-foreground/70 leading-relaxed">From the farms of Gujarat and Kerala to labs in Europe, the USA, and beyond, Pukhraj Herbals is a trusted name in pure herbal excellence.</p>
               </motion.div>
             </div>
           </div>
@@ -87,8 +87,8 @@ export default function About() {
           <div className="container mx-auto px-4 md:px-6">
             <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
               {[
-                { Icon: Target, title: "Our Mission", text: "To deliver nature's finest gifts in their most potent and pure form — combining traditional Ayurvedic knowledge with advanced extraction technology to build long-term partnerships based on trust, quality, and innovation." },
-                { Icon: Eye, title: "Our Vision", text: "To promote holistic health, natural beauty, and sustainable wellness globally — making Pukhraj Herbal the most trusted source of pure herbal extracts from India's Herbal Capital, Mandsaur." },
+                { Icon: Target, title: "Our Mission", text: "To manufacture the finest botanical extracts and herbal ingredients using sustainable practices, rigorous science, and unwavering quality — empowering health and wellness industries around the globe." },
+                { Icon: Eye, title: "Our Vision", text: "To be the world's most trusted source of plant-based ingredients, recognized for purity, consistency, and the power to bridge ancient botanical wisdom with cutting-edge modern science." },
               ].map(({ Icon, title, text }, i) => (
                 <motion.div key={i} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="bg-card p-10 rounded-3xl border border-border shadow-sm">
                   <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">

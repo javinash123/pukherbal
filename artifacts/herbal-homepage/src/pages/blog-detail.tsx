@@ -6,15 +6,28 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
+import { useSEO } from "@/hooks/useSEO";
 
-const FALLBACK_IMG = "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=80&w=1200";
+const DEFAULT_IMG = "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=80&w=1200";
+
+function formatDate(iso: string) {
+  try { return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }); }
+  catch { return iso; }
+}
 
 export default function BlogDetail() {
   const params = useParams<{ slug: string }>();
   const slug = params.slug || "";
-  const [blog, setBlog] = useState<any>(null);
+  const [blog, setBlog] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+
+  useSEO({
+    title: blog ? (blog.metaTitle || `${blog.title} | Pukhraj Herbals`) : undefined,
+    description: blog?.metaDescription || blog?.excerpt,
+    keywords: blog?.metaKeywords,
+    ogImage: blog?.imageUrl,
+  });
 
   useEffect(() => {
     if (!slug) return;
@@ -28,8 +41,17 @@ export default function BlogDetail() {
     return (
       <div className="min-h-screen flex flex-col font-sans">
         <Navbar />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        <main className="flex-1">
+          <div className="h-[55vh] min-h-[360px] bg-muted animate-pulse" />
+          <section className="py-16 bg-background">
+            <div className="container mx-auto px-4 md:px-6">
+              <div className="max-w-2xl mx-auto space-y-4">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className={`h-4 bg-muted/50 rounded animate-pulse ${i % 3 === 2 ? "w-3/4" : "w-full"}`} />
+                ))}
+              </div>
+            </div>
+          </section>
         </main>
         <Footer />
       </div>
@@ -40,20 +62,17 @@ export default function BlogDetail() {
     return (
       <div className="min-h-screen flex flex-col font-sans">
         <Navbar />
-        <main className="flex-1 flex flex-col items-center justify-center gap-4 py-24">
-          <h2 className="text-2xl font-serif font-bold text-foreground">Blog post not found</h2>
-          <Link href="/blog">
-            <Button variant="outline" className="rounded-full">
-              <ArrowLeft className="w-4 h-4 mr-2" /> Back to Blog
-            </Button>
-          </Link>
+        <main className="flex-1 flex items-center justify-center py-32">
+          <div className="text-center">
+            <h1 className="text-3xl font-serif font-bold text-foreground mb-4">Post Not Found</h1>
+            <p className="text-foreground/60 mb-6">This blog post doesn't exist or has been unpublished.</p>
+            <Link href="/blog"><Button className="rounded-full">Back to Blog</Button></Link>
+          </div>
         </main>
         <Footer />
       </div>
     );
   }
-
-  const paragraphs = blog.content ? blog.content.split(/\n+/).filter(Boolean) : [];
 
   return (
     <div className="min-h-screen flex flex-col font-sans">
@@ -61,15 +80,31 @@ export default function BlogDetail() {
       <main className="flex-1">
         {/* Hero */}
         <section className="relative h-[55vh] min-h-[360px] w-full overflow-hidden">
-          <img src={blog.imageUrl || FALLBACK_IMG} alt={blog.title} className="absolute inset-0 w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/20"></div>
+          <img
+            src={blog.imageUrl || DEFAULT_IMG}
+            alt={blog.title}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/20" />
           <div className="absolute inset-0 flex flex-col items-start justify-end container mx-auto px-4 md:px-6 pb-12 pt-24">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <div className="flex items-center gap-3 mb-4 text-white/80 text-sm flex-wrap">
-                {blog.category && <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full font-semibold text-xs">{blog.category}</span>}
-                <span>{new Date(blog.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}</span>
-                {blog.readTime && <><span>·</span><span className="flex items-center gap-1"><Clock className="w-3 h-3" />{blog.readTime}</span></>}
-                {blog.author && <><span>·</span><span>By {blog.author}</span></>}
+                {blog.category && (
+                  <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full font-semibold text-xs">{blog.category}</span>
+                )}
+                <span>{formatDate(blog.createdAt)}</span>
+                {blog.readTime && (
+                  <>
+                    <span>·</span>
+                    <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{blog.readTime}</span>
+                  </>
+                )}
+                {blog.author && blog.author !== "Pukhraj Herbals" && (
+                  <>
+                    <span>·</span>
+                    <span>By {blog.author}</span>
+                  </>
+                )}
               </div>
               <h1 className="text-3xl md:text-5xl font-serif font-bold text-white max-w-3xl leading-tight">{blog.title}</h1>
             </motion.div>
@@ -85,22 +120,30 @@ export default function BlogDetail() {
                   <ArrowLeft className="w-4 h-4" /> Back to Blog
                 </a>
               </Link>
-              <div className="prose prose-lg max-w-none">
-                {paragraphs.length > 0 ? paragraphs.map((para: string, i: number) => (
-                  <motion.p
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: i * 0.08 }}
-                    className="text-foreground/80 leading-relaxed mb-6 text-lg"
-                  >
-                    {para}
-                  </motion.p>
-                )) : (
-                  <p className="text-foreground/60 italic">No content available for this post.</p>
-                )}
-              </div>
+
+              {blog.excerpt && (
+                <p className="text-xl text-foreground/70 leading-relaxed mb-8 font-medium border-l-4 border-primary pl-4 italic">
+                  {blog.excerpt}
+                </p>
+              )}
+
+              {blog.content ? (
+                <div
+                  className="prose prose-lg max-w-none text-foreground/80
+                    prose-headings:font-serif prose-headings:text-foreground
+                    prose-h2:text-2xl prose-h2:font-bold prose-h2:mt-8 prose-h2:mb-4
+                    prose-h3:text-xl prose-h3:font-semibold prose-h3:mt-6 prose-h3:mb-3
+                    prose-p:leading-relaxed prose-p:mb-4
+                    prose-ul:list-disc prose-ul:ml-6 prose-ol:list-decimal prose-ol:ml-6
+                    prose-li:mb-1
+                    prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-foreground/60
+                    prose-strong:text-foreground prose-strong:font-semibold
+                    prose-a:text-primary prose-a:underline"
+                  dangerouslySetInnerHTML={{ __html: blog.content }}
+                />
+              ) : (
+                <p className="text-foreground/60 italic">No content available for this post.</p>
+              )}
 
               {/* CTA */}
               <div className="mt-14 p-10 bg-muted/30 rounded-3xl border border-border text-center">

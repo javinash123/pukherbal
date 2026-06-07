@@ -1,41 +1,37 @@
 import { Router } from "express";
-import { Enquiry } from "../models/Enquiry";
+import { Enquiry } from "@workspace/db";
 import { authMiddleware } from "../middleware/auth";
 
 const router = Router();
 
-function serialize(doc: any) {
-  const obj = doc.toObject ? doc.toObject() : doc;
-  return { ...obj, id: obj._id.toString(), _id: undefined };
-}
-
 // Public: submit enquiry
 router.post("/enquiries", async (req, res) => {
   try {
-    const { name, email, phone, company, subject, message } = req.body;
-    if (!name || !email || !message) {
-      res.status(400).json({ error: "Name, email and message are required" });
-      return;
-    }
-    const enquiry = await Enquiry.create({ name, email, phone, company, subject, message });
-    res.status(201).json({ success: true, id: enquiry._id.toString() });
+    const { name, email, company, phone, productOfInterest, message } = req.body;
+    if (!name || !email || !message) { res.status(400).json({ error: "Name, email and message are required" }); return; }
+    const enquiry = await Enquiry.create({ name, email, company, phone, productOfInterest, message });
+    res.status(201).json({ success: true, id: enquiry.id });
   } catch { res.status(500).json({ error: "Internal server error" }); }
 });
 
-// Admin: list all enquiries
-router.get("/admin/enquiries", authMiddleware, async (_req, res) => {
+// Admin: list all enquiries (newest first)
+router.get("/admin/enquiries", authMiddleware, async (req, res) => {
   try {
-    const enquiries = await Enquiry.find().sort({ createdAt: -1 });
-    res.json(enquiries.map(serialize));
+    const { status } = req.query;
+    const filter: any = {};
+    if (status) filter.status = status;
+    const enquiries = await Enquiry.find(filter).sort({ createdAt: -1 });
+    res.json(enquiries);
   } catch { res.status(500).json({ error: "Internal server error" }); }
 });
 
-// Admin: mark as read
-router.put("/admin/enquiries/:id/read", authMiddleware, async (req, res) => {
+// Admin: update status
+router.put("/admin/enquiries/:id", authMiddleware, async (req, res) => {
   try {
-    const enq = await Enquiry.findByIdAndUpdate(req.params.id, { read: true }, { new: true });
-    if (!enq) { res.status(404).json({ error: "Not found" }); return; }
-    res.json(serialize(enq));
+    const { status } = req.body;
+    const enquiry = await Enquiry.findByIdAndUpdate(req.params.id, { status }, { new: true });
+    if (!enquiry) { res.status(404).json({ error: "Not found" }); return; }
+    res.json(enquiry);
   } catch { res.status(500).json({ error: "Internal server error" }); }
 });
 

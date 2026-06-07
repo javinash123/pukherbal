@@ -1,12 +1,10 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { FaInstagram, FaLinkedinIn, FaFacebookF, FaYoutube } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
+import { FaInstagram, FaLinkedinIn, FaFacebookF, FaTwitter, FaYoutube, FaWhatsapp } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import logo from "@/assets/logo-new.png";
-import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import logo from "@assets/pukhraj_herbals_logo-removebg-preview_1775509460215.png";
+import { useSettings } from "@/lib/settings";
 
 const quickLinks = [
   { label: "About Us", href: "/about" },
@@ -24,39 +22,24 @@ const categoryLinks = [
   { label: "Oleoresins", href: "/categories" },
 ];
 
-interface SocialLinks {
-  instagram?: string;
-  facebook?: string;
-  youtube?: string;
-  twitter?: string;
-  linkedin?: string;
-}
-
 export function Footer() {
-  const [social, setSocial] = useState<SocialLinks>({});
+  const settings = useSettings();
 
-  useEffect(() => {
-    api.getSettings().then((settings: Record<string, string>) => {
-      setSocial({
-        instagram: settings.social_instagram,
-        facebook: settings.social_facebook,
-        youtube: settings.social_youtube,
-        twitter: settings.social_twitter,
-        linkedin: settings.social_linkedin,
-      });
-    }).catch(() => {});
-  }, []);
+  const socialLinks = [
+    { Icon: FaInstagram, url: settings["social_instagram"], label: "Instagram" },
+    { Icon: FaLinkedinIn, url: settings["social_linkedin"], label: "LinkedIn" },
+    { Icon: FaFacebookF, url: settings["social_facebook"], label: "Facebook" },
+    { Icon: FaTwitter, url: settings["social_twitter"], label: "Twitter" },
+    { Icon: FaYoutube, url: settings["social_youtube"], label: "YouTube" },
+    { Icon: FaWhatsapp, url: settings["social_whatsapp"] ? `https://wa.me/${settings["social_whatsapp"].replace(/\D/g, "")}` : undefined, label: "WhatsApp" },
+  ].filter(s => s.url);
 
-  const socialIcons: { key: keyof SocialLinks; Icon: React.ComponentType<any>; label: string }[] = [
-    { key: "instagram", Icon: FaInstagram, label: "Instagram" },
-    { key: "facebook", Icon: FaFacebookF, label: "Facebook" },
-    { key: "youtube", Icon: FaYoutube, label: "YouTube" },
-    { key: "twitter", Icon: FaXTwitter, label: "X / Twitter" },
-    { key: "linkedin", Icon: FaLinkedinIn, label: "LinkedIn" },
+  const displaySocial = socialLinks.length > 0 ? socialLinks : [
+    { Icon: FaInstagram, url: "#", label: "Instagram" },
+    { Icon: FaLinkedinIn, url: "#", label: "LinkedIn" },
+    { Icon: FaFacebookF, url: "#", label: "Facebook" },
+    { Icon: FaTwitter, url: "#", label: "Twitter" },
   ];
-
-  const activeSocial = socialIcons.filter(s => social[s.key]);
-  const fallbackSocial = socialIcons.slice(0, 4);
 
   return (
     <footer className="bg-foreground text-background pt-20 pb-10">
@@ -70,11 +53,11 @@ export function Footer() {
               Premium manufacturer of GMP & ISO certified botanical extracts, powders, and essential oils bridging ancient tradition and modern science.
             </p>
             <div className="flex items-center gap-3 flex-wrap">
-              {(activeSocial.length > 0 ? activeSocial : fallbackSocial).map(({ key, Icon, label }) => (
+              {displaySocial.map(({ Icon, url, label }) => (
                 <motion.a
-                  key={key}
-                  href={social[key] || "#"}
-                  target={social[key] ? "_blank" : undefined}
+                  key={label}
+                  href={url}
+                  target={url !== "#" ? "_blank" : undefined}
                   rel="noopener noreferrer"
                   aria-label={label}
                   whileHover={{ scale: 1.15, y: -2 }}

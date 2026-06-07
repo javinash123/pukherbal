@@ -3,16 +3,20 @@ import AdminLayout from "./layout";
 import AdminGuard from "./guard";
 import { api } from "@/lib/api";
 
-const SECTIONS = [
+const SETTING_GROUPS = [
   {
-    title: "General Settings",
+    title: "General",
+    icon: "🌿",
     keys: [
       { key: "site_tagline", label: "Site Tagline", placeholder: "Premium Ayurvedic Herbal Extracts" },
+      { key: "hero_heading", label: "Hero Heading", placeholder: "Premium Ayurvedic Herbal Extracts" },
+      { key: "hero_subheading", label: "Hero Sub-heading", placeholder: "Bridging Ancient Wisdom with Modern Science" },
       { key: "about_short", label: "About (Short Description)", placeholder: "About Pukhraj Herbals...", multiline: true },
     ],
   },
   {
-    title: "Contact Information",
+    title: "Contact Info",
+    icon: "📞",
     keys: [
       { key: "contact_email", label: "Enquiry Email", placeholder: "enquiry@pukhrajherbals.com" },
       { key: "contact_sales_email", label: "Sales Email", placeholder: "sales@pukhrajherbals.com" },
@@ -21,23 +25,25 @@ const SECTIONS = [
     ],
   },
   {
-    title: "Social Media Links",
+    title: "SEO",
+    icon: "🔍",
     keys: [
-      { key: "social_whatsapp", label: "WhatsApp Number (with country code)", placeholder: "+919876543210" },
-      { key: "social_instagram", label: "Instagram URL", placeholder: "https://instagram.com/pukhrajherbals" },
-      { key: "social_facebook", label: "Facebook URL", placeholder: "https://facebook.com/pukhrajherbals" },
-      { key: "social_youtube", label: "YouTube Channel URL", placeholder: "https://youtube.com/@pukhrajherbals" },
-      { key: "social_twitter", label: "Twitter / X URL", placeholder: "https://twitter.com/pukhrajherbals" },
-      { key: "social_linkedin", label: "LinkedIn URL", placeholder: "https://linkedin.com/company/pukhrajherbals" },
+      { key: "seo_meta_title", label: "Default Meta Title", placeholder: "Pukhraj Herbals | Premium Ayurvedic Herbal Extracts" },
+      { key: "seo_meta_description", label: "Default Meta Description", placeholder: "GMP & ISO certified manufacturer of premium herbal extracts, botanical powders and essential oils...", multiline: true },
+      { key: "seo_meta_keywords", label: "Default Meta Keywords", placeholder: "herbal extracts, ayurvedic, botanical, ashwagandha, turmeric, India" },
+      { key: "seo_og_image", label: "OG Image URL (for social sharing)", placeholder: "https://yourdomain.com/pukhrajherbals/api/uploads/og-image.jpg" },
     ],
   },
   {
-    title: "Site-wide SEO",
+    title: "Social Media Links",
+    icon: "📱",
     keys: [
-      { key: "seo_title", label: "Default SEO Title", placeholder: "Pukhraj Herbals – Premium Herbal Extracts & Powders" },
-      { key: "seo_description", label: "Default Meta Description", placeholder: "Pukhraj Herbals is a GMP & ISO certified manufacturer of natural herbal extracts, powders, and essential oils.", multiline: true },
-      { key: "seo_keywords", label: "Default Meta Keywords", placeholder: "herbal extracts, ayurvedic, botanical extracts, essential oils, GMP certified" },
-      { key: "seo_og_image", label: "Default OG Image URL", placeholder: "https://pukhrajherbals.com/og-image.jpg" },
+      { key: "social_instagram", label: "Instagram URL", placeholder: "https://instagram.com/pukhrajherbals" },
+      { key: "social_facebook", label: "Facebook URL", placeholder: "https://facebook.com/pukhrajherbals" },
+      { key: "social_twitter", label: "Twitter / X URL", placeholder: "https://twitter.com/pukhrajherbals" },
+      { key: "social_linkedin", label: "LinkedIn URL", placeholder: "https://linkedin.com/company/pukhrajherbals" },
+      { key: "social_youtube", label: "YouTube URL", placeholder: "https://youtube.com/@pukhrajherbals" },
+      { key: "social_whatsapp", label: "WhatsApp Number (with country code)", placeholder: "+919876543210" },
     ],
   },
 ];
@@ -76,11 +82,13 @@ export default function AdminSettings() {
           {loading ? (
             <div className="text-gray-400 text-sm">Loading settings...</div>
           ) : (
-            SECTIONS.map(section => (
-              <div key={section.title}>
-                <h2 className="text-base font-bold text-gray-800 mb-3 pb-2 border-b border-gray-200">{section.title}</h2>
-                <div className="space-y-4">
-                  {section.keys.map((s) => (
+            SETTING_GROUPS.map((group) => (
+              <div key={group.title}>
+                <h2 className="text-base font-bold text-gray-700 mb-3 flex items-center gap-2">
+                  <span>{group.icon}</span> {group.title}
+                </h2>
+                <div className="space-y-3">
+                  {group.keys.map((s) => (
                     <div key={s.key} className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                       <label className="block text-sm font-semibold text-gray-700 mb-2">{s.label}</label>
                       {(s as any).multiline ? (
@@ -107,7 +115,7 @@ export default function AdminSettings() {
                         >
                           {saving === s.key ? "Saving..." : "Save"}
                         </button>
-                        {saved === s.key && <span className="text-green-600 text-sm">✓ Saved!</span>}
+                        {saved === s.key && <span className="text-green-600 text-sm font-medium">✓ Saved!</span>}
                       </div>
                     </div>
                   ))}

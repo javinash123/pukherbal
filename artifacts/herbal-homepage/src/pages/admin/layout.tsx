@@ -13,11 +13,9 @@ const navItems = [
   { href: "/admin/categories", label: "Categories", icon: "📂" },
   { href: "/admin/products", label: "Products", icon: "🌿" },
   { href: "/admin/blogs", label: "Blog Posts", icon: "📝" },
-  { href: "/admin/testimonials", label: "Testimonials", icon: "💬" },
-  { href: "/admin/enquiries", label: "Enquiries", icon: "📬" },
-  { href: "/admin/hero-slides", label: "Hero Slides", icon: "🖼️" },
-  { href: "/admin/videos", label: "Videos", icon: "▶️" },
-  { href: "/admin/visitors", label: "Visitors", icon: "👥" },
+  { href: "/admin/enquiries", label: "Enquiries", icon: "📨" },
+  { href: "/admin/hero-slides", label: "Hero Slider", icon: "🖼️" },
+  { href: "/admin/video-items", label: "Product in Motion", icon: "▶️" },
   { href: "/admin/settings", label: "Settings", icon: "⚙️" },
 ];
 

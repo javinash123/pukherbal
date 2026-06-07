@@ -103,19 +103,13 @@ type = "unspecified"
 title = "pukhrajherbals.tar.gz — Production Build"
 
 [[outputs]]
-id = "7McIO6DehUhGCG4geoBvL"
+id = "R6NHyGB-HZmpieU2l6pqE"
+uri = "file://deploy/pukhrajherbals-deploy.tar.gz"
+type = "unspecified"
+title = "pukhrajherbals-deploy.tar.gz"
+
+[[outputs]]
+id = "3VEJVE48qovKFEok3Stq0"
 uri = "file://pukhrajherbals-deploy.tar.gz"
 type = "unspecified"
-title = "Pukhraj Herbals - Full Deployment Package"
-
-[[outputs]]
-id = "qbrwaXtSTvoJgwt-YEKIn"
-uri = "file://pukhrajherbals.tar.gz"
-type = "unspecified"
-title = "Pukhraj Herbals - Single Folder Deployment"
-
-[[outputs]]
-id = "IZexQ0mCMe_0x10UaT0LI"
-uri = "file://artifacts/api-server/dist-deploy.tar.gz"
-type = "unspecified"
-title = "Pukhraj Herbal — dist-deploy.tar.gz"
+title = "pukhrajherbals-deploy.tar.gz (all fixes applied)"

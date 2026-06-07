@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Setting } from "../models/Setting";
+import { Setting } from "@workspace/db";
 import { authMiddleware } from "../middleware/auth";
 
 const router = Router();
@@ -20,12 +20,8 @@ router.put("/admin/settings/:key", authMiddleware, async (req, res) => {
     const { key } = req.params;
     const { value } = req.body;
     if (value === undefined) { res.status(400).json({ error: "value is required" }); return; }
-    const setting = await Setting.findOneAndUpdate(
-      { key },
-      { key, value },
-      { upsert: true, new: true }
-    );
-    res.json({ key: setting.key, value: setting.value });
+    const s = await Setting.findOneAndUpdate({ key }, { value }, { new: true, upsert: true });
+    res.json(s);
   } catch { res.status(500).json({ error: "Internal server error" }); }
 });
 

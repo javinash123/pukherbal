@@ -3,7 +3,8 @@ import { Link, useLocation } from "wouter";
 import { Search, Menu, X } from "lucide-react";
 import { FaInstagram, FaLinkedinIn, FaFacebookF, FaTwitter } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "@/assets/logo-new.png";
+import logo from "@/assets/pukhraj-logo-original.png";
+import { useSettings } from "@/lib/settings";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -11,6 +12,9 @@ export function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [location] = useLocation();
   const isHome = location === "/";
+  // Detail pages have a plain/light background at top — always show solid navbar
+  const isDetailPage = /^\/(products|categories|blog)\/.+/.test(location);
+  const settings = useSettings();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -18,8 +22,7 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Transparent when: on any page at top of scroll
-  const isTransparent = !isScrolled;
+  const isTransparent = !isScrolled && !isDetailPage;
 
   const navLinks = [
     { label: "Home", href: "/" },
@@ -28,6 +31,20 @@ export function Navbar() {
     { label: "Categories", href: "/categories" },
     { label: "Blog", href: "/blog" },
     { label: "Contact", href: "/contact" },
+  ];
+
+  const socialLinks = [
+    { Icon: FaInstagram, url: settings["social_instagram"], id: "social-ig" },
+    { Icon: FaLinkedinIn, url: settings["social_linkedin"], id: "social-li" },
+    { Icon: FaFacebookF, url: settings["social_facebook"], id: "social-fb" },
+    { Icon: FaTwitter, url: settings["social_twitter"], id: "social-tw" },
+  ].filter(s => s.url);
+
+  const allSocialLinks = [
+    { Icon: FaInstagram, url: settings["social_instagram"] || "#", id: "social-ig" },
+    { Icon: FaLinkedinIn, url: settings["social_linkedin"] || "#", id: "social-li" },
+    { Icon: FaFacebookF, url: settings["social_facebook"] || "#", id: "social-fb" },
+    { Icon: FaTwitter, url: settings["social_twitter"] || "#", id: "social-tw" },
   ];
 
   const textColor = isTransparent
@@ -47,20 +64,20 @@ export function Navbar() {
       }`}
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between gap-4">
-        {/* Logo */}
         <Link href="/" className="flex items-center shrink-0" data-testid="nav-logo">
-          <motion.img
-            src={logo}
-            alt="Pukhraj Herbals"
-            className={`h-12 md:h-14 w-auto object-contain transition-all duration-300 ${
-              isTransparent && !isHome ? "brightness-0 invert" : ""
-            }`}
-            whileHover={{ scale: 1.03 }}
+          <motion.div
+            className="w-14 h-14 md:w-20 md:h-20 rounded-full overflow-hidden shrink-0 shadow-lg ring-2 ring-primary/30"
+            whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
-          />
+          >
+            <img
+              src={logo}
+              alt="Pukhraj Herbals"
+              className="w-full h-full object-cover scale-[1.08]"
+            />
+          </motion.div>
         </Link>
 
-        {/* Desktop Nav */}
         <nav className="hidden md:flex items-center space-x-7">
           {navLinks.map((link) => {
             const isActive = location === link.href;
@@ -78,7 +95,6 @@ export function Navbar() {
           })}
         </nav>
 
-        {/* Right Actions */}
         <div className="hidden md:flex items-center space-x-2">
           <AnimatePresence>
             {searchOpen && (
@@ -104,15 +120,12 @@ export function Navbar() {
           </button>
           <div className={`w-px h-5 mx-1 ${isTransparent && !isHome ? "bg-white/30" : "bg-border"}`}></div>
           <div className="flex items-center space-x-1">
-            {[
-              { Icon: FaInstagram, id: "social-ig" },
-              { Icon: FaLinkedinIn, id: "social-li" },
-              { Icon: FaFacebookF, id: "social-fb" },
-              { Icon: FaTwitter, id: "social-tw" },
-            ].map(({ Icon, id }) => (
+            {allSocialLinks.map(({ Icon, url, id }) => (
               <motion.a
                 key={id}
-                href="#"
+                href={url}
+                target={url !== "#" ? "_blank" : undefined}
+                rel="noopener noreferrer"
                 whileHover={{ scale: 1.2, y: -2 }}
                 transition={{ type: "spring", stiffness: 400, damping: 15 }}
                 className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${iconColor}`}
@@ -124,7 +137,6 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu Toggle */}
         <button
           className={`md:hidden p-2 rounded-full hover:bg-black/10 transition-colors ${textColor}`}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -134,7 +146,6 @@ export function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -162,8 +173,8 @@ export function Navbar() {
                 </motion.div>
               ))}
               <div className="flex items-center space-x-3 pt-4 px-4">
-                {[FaInstagram, FaLinkedinIn, FaFacebookF, FaTwitter].map((Icon, i) => (
-                  <a key={i} href="#" className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-foreground/60 hover:text-primary transition-colors">
+                {allSocialLinks.map(({ Icon, url, id }) => (
+                  <a key={id} href={url} target={url !== "#" ? "_blank" : undefined} rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-foreground/60 hover:text-primary transition-colors">
                     <Icon className="w-4 h-4" />
                   </a>
                 ))}

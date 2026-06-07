@@ -1,0 +1,13 @@
+{
+  "name": "pukhraj-herbals",
+  "version": "1.0.0",
+  "description": "Pukhraj Herbals — Production Server",
+  "main": "index.cjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node index.cjs",
+    "seed": "node seed.cjs"
+  }
+}

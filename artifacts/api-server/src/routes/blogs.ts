@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Blog } from "../models/Blog";
+import { Blog } from "@workspace/db";
 import { authMiddleware } from "../middleware/auth";
 
 const router = Router();
@@ -8,16 +8,24 @@ function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
-function serialize(doc: any) {
-  const obj = doc.toObject ? doc.toObject() : doc;
-  return { ...obj, id: obj._id.toString(), _id: undefined };
+async function uniqueSlug(base: string, excludeId?: string): Promise<string> {
+  let slug = base;
+  let suffix = 0;
+  while (true) {
+    const query: any = { slug };
+    if (excludeId) query._id = { $ne: excludeId };
+    const existing = await Blog.findOne(query);
+    if (!existing) return slug;
+    suffix++;
+    slug = `${base}-${suffix}`;
+  }
 }
 
-// Public: list published blogs
+// Public: list published blogs (newest first)
 router.get("/blogs", async (_req, res) => {
   try {
     const posts = await Blog.find({ published: true }).sort({ createdAt: -1 });
-    res.json(posts.map(serialize));
+    res.json(posts);
   } catch { res.status(500).json({ error: "Internal server error" }); }
 });
 
@@ -26,38 +34,41 @@ router.get("/blogs/:slug", async (req, res) => {
   try {
     const post = await Blog.findOne({ slug: req.params.slug, published: true });
     if (!post) { res.status(404).json({ error: "Not found" }); return; }
-    res.json(serialize(post));
+    res.json(post);
   } catch { res.status(500).json({ error: "Internal server error" }); }
 });
 
-// Admin: list all
+// Admin: list all blogs (newest first)
 router.get("/admin/blogs", authMiddleware, async (_req, res) => {
   try {
     const posts = await Blog.find().sort({ createdAt: -1 });
-    res.json(posts.map(serialize));
+    res.json(posts);
   } catch { res.status(500).json({ error: "Internal server error" }); }
 });
 
 // Admin: create
 router.post("/admin/blogs", authMiddleware, async (req, res) => {
   try {
-    const { title, excerpt, content, imageUrl, category, readTime, author, published = false, featured = false, seoTitle, seoDescription, seoKeywords } = req.body;
+    const { title, excerpt, content, imageUrl, category, readTime, author, published = false, featured = false } = req.body;
     if (!title) { res.status(400).json({ error: "Title is required" }); return; }
-    const slug = slugify(title) + "-" + Date.now();
-    const post = await Blog.create({ title, slug, excerpt, content, imageUrl, category, readTime, author: author || "Pukhraj Herbals", published, featured, seoTitle, seoDescription, seoKeywords });
-    res.status(201).json(serialize(post));
-  } catch { res.status(500).json({ error: "Internal server error" }); }
+    const slug = await uniqueSlug(slugify(title));
+    const post = await Blog.create({ title, slug, excerpt, content, imageUrl, category, readTime, author: author || "Pukhraj Herbals", published, featured });
+    res.status(201).json(post);
+  } catch (err: any) {
+    if (err.code === 11000) { res.status(409).json({ error: "A post with this title already exists" }); return; }
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
-// Admin: update
+// Admin: update (slug is NOT changed to preserve URLs)
 router.put("/admin/blogs/:id", authMiddleware, async (req, res) => {
   try {
     const updates: any = {};
-    const fields = ["title", "excerpt", "content", "imageUrl", "category", "readTime", "author", "published", "featured", "seoTitle", "seoDescription", "seoKeywords"];
+    const fields = ["title", "excerpt", "content", "imageUrl", "category", "readTime", "author", "published", "featured"];
     for (const f of fields) { if (req.body[f] !== undefined) updates[f] = req.body[f]; }
     const post = await Blog.findByIdAndUpdate(req.params.id, updates, { new: true });
     if (!post) { res.status(404).json({ error: "Not found" }); return; }
-    res.json(serialize(post));
+    res.json(post);
   } catch { res.status(500).json({ error: "Internal server error" }); }
 });
 

@@ -1,0 +1,30 @@
+[root@ip-172-31-91-208 pukhrajherbals]# node seed.cjs
+Seed failed: Error: MONGODB_URI must be set.
+    at connectDB (/var/www/html/pukhrajherbals/seed.cjs:67175:19)
+    at seed (/var/www/html/pukhrajherbals/seed.cjs:67182:9)
+    at Object.<anonymous> (/var/www/html/pukhrajherbals/seed.cjs:67276:1)
+    at Module._compile (node:internal/modules/cjs/loader:1198:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1252:10)
+    at Module.load (node:internal/modules/cjs/loader:1076:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:911:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_ma                                                                                        in:81:12)
+    at node:internal/main/run_main_module:22:47
+[root@ip-172-31-91-208 pukhrajherbals]# node index.cjs
+/var/www/html/pukhrajherbals/index.cjs:19930
+          throw new PathError(`Missing parameter name at index ${index}`, str);
+          ^
+
+PathError [TypeError]: Missing parameter name at index 17: /pukhrajherbals/*; vi                                                                                        sit https://git.new/pathToRegexpError for info
+    at name (/var/www/html/pukhrajherbals/index.cjs:19930:17)
+    at parse (/var/www/html/pukhrajherbals/index.cjs:19944:66)
+    at pathToRegexp (/var/www/html/pukhrajherbals/index.cjs:20086:58)
+    at Object.match (/var/www/html/pukhrajherbals/index.cjs:20056:32)
+    at matcher (/var/www/html/pukhrajherbals/index.cjs:20258:27)
+    at new Layer (/var/www/html/pukhrajherbals/index.cjs:20265:68)
+    at Function.route (/var/www/html/pukhrajherbals/index.cjs:20690:21)
+    at Function.route (/var/www/html/pukhrajherbals/index.cjs:20999:26)
+    at Function.app2.<computed> [as get] (/var/www/html/pukhrajherbals/index.cjs                                                                                        :21062:26)
+    at Object.<anonymous> (/var/www/html/pukhrajherbals/index.cjs:115549:7) {
+  originalPath: '/pukhrajherbals/*'
+}
+[root@ip-172-31-91-208 pukhrajherbals]#
