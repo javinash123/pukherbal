@@ -35,7 +35,14 @@ const uploadsDir = path.join(appDir, "uploads");
 
 const app: Express = express();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "https://pukhrajherbals.com",
+    "https://www.pukhrajherbals.com",
+    /localhost/,
+  ],
+  credentials: true,
+}));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 

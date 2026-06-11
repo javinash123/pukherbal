@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { API_BASE } from "@/lib/api";
+import { API_BASE, resolveImageUrl } from "@/lib/api";
 
 interface Props {
   value: string;
@@ -118,7 +118,7 @@ export function ImageUpload({ value, onChange, label = "Image" }: Props) {
         <div className="mt-3 flex items-start gap-3">
           <div className="relative flex-shrink-0">
             <img
-              src={value}
+              src={resolveImageUrl(value) || value}
               alt="Preview"
               className="w-24 h-24 object-cover rounded-lg border border-gray-200 bg-gray-50"
               onError={e => {

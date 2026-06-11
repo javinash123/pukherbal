@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { api } from "@/lib/api";
+import { api, resolveImageUrl } from "@/lib/api";
 import hero1 from "@/assets/hero-1.png";
 
 // Fallback images for seeded categories
@@ -80,7 +80,7 @@ export default function Categories() {
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 {categories.map(({ id, name, slug, description, imageUrl }, i) => {
-                  const imgSrc = imageUrl || fallbackImg(slug);
+                  const imgSrc = resolveImageUrl(imageUrl) || fallbackImg(slug);
                   return (
                     <motion.div
                       key={id}

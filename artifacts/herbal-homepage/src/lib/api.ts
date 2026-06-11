@@ -1,5 +1,20 @@
 export const API_BASE: string = import.meta.env.VITE_API_BASE || "/api";
 
+/**
+ * Converts a stored image URL (e.g. /api/uploads/file.jpg) to a full URL
+ * using the current API base. Absolute URLs are returned unchanged.
+ */
+export function resolveImageUrl(url: string | null | undefined): string {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+  // Handle /api/uploads/... (new format from upload route)
+  if (url.startsWith("/api/")) return `${API_BASE}${url.slice(4)}`;
+  // Handle /pukhrajherbals/api/uploads/... (old stored format — strip the base prefix)
+  const apiIdx = url.indexOf("/api/");
+  if (apiIdx !== -1) return `${API_BASE}${url.slice(apiIdx + 4)}`;
+  return url;
+}
+
 function getToken() { return localStorage.getItem("admin_token"); }
 
 async function request<T>(method: string, path: string, body?: unknown): Promise<T> {

@@ -5,7 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/PageHero";
-import { api } from "@/lib/api";
+import { api, resolveImageUrl } from "@/lib/api";
 import { useSEO } from "@/hooks/useSEO";
 import prodAshwagandha from "@/assets/product-ashwagandha.png";
 import prodTurmeric from "@/assets/product-turmeric.png";
@@ -89,7 +89,7 @@ export default function CategoryDetail() {
 
   const products: any[] = category.products || [];
   const filtered = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
-  const heroImg = category.imageUrl || catExtracts;
+  const heroImg = resolveImageUrl(category.imageUrl) || catExtracts;
 
   return (
     <div className="min-h-screen flex flex-col font-sans">
@@ -137,9 +137,9 @@ export default function CategoryDetail() {
                     <Link key={product.id} href={`/products/${product.slug}`}>
                       <div className="group bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col">
                         <div className="relative aspect-square overflow-hidden bg-muted/30">
-                          {product.imageUrl || fb ? (
+                          {resolveImageUrl(product.imageUrl) || fb ? (
                             <img
-                              src={product.imageUrl || fb!}
+                              src={resolveImageUrl(product.imageUrl) || fb!}
                               alt={product.name}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                               onError={e => { if (fb) (e.target as HTMLImageElement).src = fb; }}

@@ -4,7 +4,7 @@ import { ArrowRight, ArrowLeft, Tag, FlaskConical } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { api } from "@/lib/api";
+import { api, resolveImageUrl } from "@/lib/api";
 import { useSEO } from "@/hooks/useSEO";
 import prodAshwagandha from "@/assets/product-ashwagandha.png";
 import prodTurmeric from "@/assets/product-turmeric.png";
@@ -61,7 +61,7 @@ export default function ProductDetail() {
       .finally(() => setLoading(false));
   }, [slug]);
 
-  const imgSrc = product?.imageUrl || (slug ? getFallback(slug) : null);
+  const imgSrc = resolveImageUrl(product?.imageUrl) || (slug ? getFallback(slug) : null);
 
   if (loading) {
     return (
@@ -202,9 +202,9 @@ export default function ProductDetail() {
                     <Link key={p.id} href={`/products/${p.slug}`}>
                       <div className="group bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer h-full">
                         <div className="aspect-square overflow-hidden bg-muted/30">
-                          {p.imageUrl || relFb ? (
+                          {resolveImageUrl(p.imageUrl) || relFb ? (
                             <img
-                              src={p.imageUrl || relFb!}
+                              src={resolveImageUrl(p.imageUrl) || relFb!}
                               alt={p.name}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                               onError={e => { if (relFb) (e.target as HTMLImageElement).src = relFb; }}

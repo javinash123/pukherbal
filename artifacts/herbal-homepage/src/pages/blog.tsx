@@ -6,7 +6,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
-import { api } from "@/lib/api";
+import { api, resolveImageUrl } from "@/lib/api";
 import hero2 from "@/assets/hero-2.png";
 
 // Placeholder blog images by index for blogs without imageUrl
@@ -81,7 +81,7 @@ export default function Blog() {
                     <div className="rounded-3xl overflow-hidden bg-card border border-border shadow-md flex flex-col md:flex-row">
                       <div className="md:w-1/2 relative h-72 md:h-auto overflow-hidden">
                         <img
-                          src={featured.imageUrl || PLACEHOLDER_IMGS[0]}
+                          src={resolveImageUrl(featured.imageUrl) || PLACEHOLDER_IMGS[0]}
                           alt={featured.title}
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
@@ -126,7 +126,7 @@ export default function Blog() {
                     >
                       <div className="relative h-52 overflow-hidden">
                         <img
-                          src={blog.imageUrl || PLACEHOLDER_IMGS[idx % PLACEHOLDER_IMGS.length]}
+                          src={resolveImageUrl(blog.imageUrl) || PLACEHOLDER_IMGS[idx % PLACEHOLDER_IMGS.length]}
                           alt={blog.title}
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />

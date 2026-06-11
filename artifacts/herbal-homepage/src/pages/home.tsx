@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "wouter";
-import { api } from "@/lib/api";
+import { api, resolveImageUrl } from "@/lib/api";
 import { useSEO } from "@/hooks/useSEO";
 import { useSettings } from "@/lib/settings";
 import { motion } from "framer-motion";
@@ -96,7 +96,7 @@ function HeroSection() {
         <div className="flex h-full touch-pan-y">
           {slides.map((slide, index) => (
             <div key={index} className="relative h-full flex-[0_0_100%] min-w-0">
-              <img src={slide.imageUrl || slide.image} alt={slide.title} className="absolute inset-0 w-full h-full object-cover object-center" />
+              <img src={resolveImageUrl(slide.imageUrl) || slide.image} alt={slide.title} className="absolute inset-0 w-full h-full object-cover object-center" />
               <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/60 to-transparent"></div>
               
               <div className="container mx-auto px-4 md:px-6 h-full flex items-center relative z-10">
@@ -306,7 +306,7 @@ function LatestProductsSection() {
     ? liveProducts.map(p => ({
         name: p.name,
         desc: p.description?.replace(/<[^>]*>/g, "").slice(0, 100) || "",
-        img: p.imageUrl || getProductFallback(p.slug) || prodAshwagandha,
+        img: resolveImageUrl(p.imageUrl) || getProductFallback(p.slug) || prodAshwagandha,
         slug: p.slug,
       }))
     : staticProducts;
@@ -408,7 +408,7 @@ function CategoriesSection() {
   ];
 
   const displayCategories = liveCategories.length > 0
-    ? liveCategories.map(c => ({ name: c.name, slug: c.slug, img: c.imageUrl || getCatFallback(c.slug, c.name) }))
+    ? liveCategories.map(c => ({ name: c.name, slug: c.slug, img: resolveImageUrl(c.imageUrl) || getCatFallback(c.slug, c.name) }))
     : staticCategories;
 
   return (
@@ -559,7 +559,7 @@ function KeyProductsSection() {
           slug: p.slug,
           desc: p.description?.replace(/<[^>]*>/g, "").slice(0, 200) || staticProducts[i % staticProducts.length].desc,
           tags: [],
-          img: p.imageUrl || staticProducts[i % staticProducts.length].img,
+          img: resolveImageUrl(p.imageUrl) || staticProducts[i % staticProducts.length].img,
         })));
       }
     }).catch(() => {});
@@ -658,7 +658,7 @@ function BlogSection() {
             >
               <Link href={blog.slug ? `/blog/${blog.slug}` : "/blog"} className="block">
                 <div className="relative aspect-[16/9] overflow-hidden">
-                  <img src={blog.imageUrl} alt={blog.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <img src={resolveImageUrl(blog.imageUrl)} alt={blog.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm text-foreground text-xs font-bold px-3 py-1.5 rounded-full">
                     {formatBlogDate(blog.createdAt || blog.date || "")}
                   </div>

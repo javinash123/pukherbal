@@ -5,7 +5,7 @@ import { Link, useParams } from "wouter";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { api } from "@/lib/api";
+import { api, resolveImageUrl } from "@/lib/api";
 import { useSEO } from "@/hooks/useSEO";
 
 const DEFAULT_IMG = "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=80&w=1200";
@@ -81,7 +81,7 @@ export default function BlogDetail() {
         {/* Hero */}
         <section className="relative h-[55vh] min-h-[360px] w-full overflow-hidden">
           <img
-            src={blog.imageUrl || DEFAULT_IMG}
+            src={resolveImageUrl(blog.imageUrl) || DEFAULT_IMG}
             alt={blog.title}
             className="absolute inset-0 w-full h-full object-cover"
           />

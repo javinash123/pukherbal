@@ -35,8 +35,9 @@ router.post("/upload", authMiddleware, upload.single("image"), (req, res) => {
     res.status(400).json({ error: "No file uploaded" });
     return;
   }
-  // Include BASE_PATH so the URL works on subdirectory deployments
-  const url = `${BASE_PATH}/api/uploads/${req.file.filename}`;
+  // Return a root-relative /api/uploads/ URL so the frontend can resolve it
+  // via resolveImageUrl() regardless of BASE_PATH
+  const url = `/api/uploads/${req.file.filename}`;
   res.json({ url, filename: req.file.filename });
 });
 

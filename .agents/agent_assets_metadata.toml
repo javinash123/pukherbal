@@ -112,4 +112,40 @@ title = "pukhrajherbals-deploy.tar.gz"
 id = "3VEJVE48qovKFEok3Stq0"
 uri = "file://pukhrajherbals-deploy.tar.gz"
 type = "unspecified"
-title = "pukhrajherbals-deploy.tar.gz (all fixes applied)"
+title = "pukhrajherbals-deploy.tar.gz — All deployment files"
+
+[[outputs]]
+id = "Hnzfbz8OXnGbLWCDNj4ak"
+uri = "file://dist-deploy.tar.gz"
+type = "unspecified"
+title = "Pukhraj Herbal — dist-deploy.tar.gz"
+
+[[outputs]]
+id = "wtj13iCV_BsOwev3ZrD8c"
+uri = "file://pukhrajherbals-easy-deploy.tar.gz"
+type = "unspecified"
+title = "pukhrajherbals-easy-deploy.tar.gz — Upload this to your server"
+
+[[outputs]]
+id = "cOTH1477LZlRb3DxPIXAS"
+uri = "file://pukhrajherbals-final-deploy.tar.gz"
+type = "unspecified"
+title = "pukhrajherbals-final-deploy.tar.gz — Fixed for Apache"
+
+[[outputs]]
+id = "hJuvM3SouburN3xt66TyL"
+uri = "file://htaccess-for-cpanel.txt"
+type = "text"
+title = "htaccess-for-cpanel.txt — Rename to .htaccess and upload"
+
+[[outputs]]
+id = "bgoLHJjBQBCqWu8IAn8c9"
+uri = "file://frontend-deploy.tar.gz"
+type = "unspecified"
+title = "frontend-deploy.tar.gz — Updated frontend"
+
+[[outputs]]
+id = "aVr1sHnZPdS4N5XWi5hzF"
+uri = "file://backend-deploy.tar.gz"
+type = "unspecified"
+title = "index.cjs — Upload to your pukhrajherbals/ folder"

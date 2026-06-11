@@ -7,7 +7,7 @@ import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
-import { api } from "@/lib/api";
+import { api, resolveImageUrl } from "@/lib/api";
 import hero3 from "@/assets/hero-3.png";
 
 import prodAshwagandha from "@/assets/product-ashwagandha.png";
@@ -35,7 +35,7 @@ function getFallbackImage(slug: string): string | null {
 
 function ProductImage({ imageUrl, slug, name }: { imageUrl?: string; slug: string; name: string }) {
   const fallback = getFallbackImage(slug);
-  const src = imageUrl || fallback;
+  const src = resolveImageUrl(imageUrl) || fallback;
   if (src) {
     return (
       <img
@@ -63,7 +63,10 @@ export default function Products() {
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("All");
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("q") || "";
+  });
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
@@ -133,8 +136,8 @@ export default function Products() {
                           className="flex items-center gap-3 px-4 py-2.5 hover:bg-primary/5 transition-colors cursor-pointer border-b border-border/50 last:border-0"
                         >
                           <div className="w-9 h-9 rounded-lg overflow-hidden bg-muted/40 shrink-0">
-                            {p.imageUrl || fb ? (
-                              <img src={p.imageUrl || fb!} alt={p.name} className="w-full h-full object-cover" onError={e => { if (fb) (e.target as HTMLImageElement).src = fb; }} />
+                            {resolveImageUrl(p.imageUrl) || fb ? (
+                              <img src={resolveImageUrl(p.imageUrl) || fb!} alt={p.name} className="w-full h-full object-cover" onError={e => { if (fb) (e.target as HTMLImageElement).src = fb; }} />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center text-sm">🌿</div>
                             )}
