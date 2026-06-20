@@ -1,9 +1,9 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { FaInstagram, FaLinkedinIn, FaFacebookF, FaTwitter, FaYoutube, FaWhatsapp } from "react-icons/fa";
+import { FaInstagram, FaLinkedinIn, FaFacebookF, FaTwitter, FaYoutube, FaWhatsapp, FaAmazon } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import logo from "@assets/pukhraj_herbals_logo-removebg-preview_1775509460215.png";
+import logo from "@/assets/pukhraj-logo-original.png";
 import { useSettings } from "@/lib/settings";
 
 const quickLinks = [
@@ -46,12 +46,39 @@ export function Footer() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           <div className="lg:col-span-1">
-            <Link href="/" className="inline-block mb-6" data-testid="footer-logo">
-              <img src={logo} alt="Pukhraj Herbals" className="h-16 w-auto object-contain brightness-0 invert" />
+            <Link href="/" className="inline-flex items-center gap-3 mb-4" data-testid="footer-logo">
+              <img src={logo} alt="Pukhraj Herbals" className="h-14 w-auto object-contain" />
+              <span className="font-serif font-bold text-lg leading-tight text-background">Pukhraj<br />Herbals</span>
             </Link>
-            <p className="text-background/60 text-sm leading-relaxed mb-6">
+            <p className="text-background/60 text-sm leading-relaxed mb-5">
               Premium manufacturer of GMP & ISO certified botanical extracts, powders, and essential oils bridging ancient tradition and modern science.
             </p>
+
+            {/* Available on Amazon & Meesho */}
+            <div className="mb-5">
+              <p className="text-background/50 text-xs font-semibold uppercase tracking-wider mb-2">Also available on</p>
+              <div className="flex items-center gap-3">
+                <a
+                  href="https://www.amazon.in"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 bg-background/10 hover:bg-[#FF9900]/20 border border-background/20 hover:border-[#FF9900]/50 rounded-lg px-3 py-1.5 transition-colors"
+                >
+                  <FaAmazon className="w-4 h-4 text-[#FF9900]" />
+                  <span className="text-xs font-semibold text-background/80">Amazon</span>
+                </a>
+                <a
+                  href="https://www.meesho.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 bg-background/10 hover:bg-[#f43397]/20 border border-background/20 hover:border-[#f43397]/50 rounded-lg px-3 py-1.5 transition-colors"
+                >
+                  <span className="text-[#f43397] font-black text-xs">M</span>
+                  <span className="text-xs font-semibold text-background/80">Meesho</span>
+                </a>
+              </div>
+            </div>
+
             <div className="flex items-center gap-3 flex-wrap">
               {displaySocial.map(({ Icon, url, label }) => (
                 <motion.a
@@ -111,6 +138,7 @@ export function Footer() {
             © {new Date().getFullYear()} Pukhraj Herbals. All rights reserved.
           </p>
           <div className="flex gap-6">
+            <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="text-background/40 hover:text-primary text-sm transition-colors">Sitemap</a>
             <a href="#" className="text-background/40 hover:text-primary text-sm transition-colors">Privacy Policy</a>
             <a href="#" className="text-background/40 hover:text-primary text-sm transition-colors">Terms of Service</a>
           </div>

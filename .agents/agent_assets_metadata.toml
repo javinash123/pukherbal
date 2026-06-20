@@ -149,3 +149,21 @@ id = "aVr1sHnZPdS4N5XWi5hzF"
 uri = "file://backend-deploy.tar.gz"
 type = "unspecified"
 title = "index.cjs — Upload to your pukhrajherbals/ folder"
+
+[[outputs]]
+id = "2rF5fdt7iWaPCRSNyaJXm"
+uri = "file://deploy_output/pukhrajherbals-deploy.tar.gz"
+type = "unspecified"
+title = "pukhrajherbals-deploy.tar.gz (19MB)"
+
+[[outputs]]
+id = "BmDTt7WPR7hIDVUv2nN-H"
+uri = "file://deploy_output/frontend-shared-hosting.tar.gz"
+type = "unspecified"
+title = "frontend-shared-hosting.tar.gz → Upload to public_html"
+
+[[outputs]]
+id = "Dl0YZIDFJc4gIhxWMRuwX"
+uri = "file://deploy_output/backend-vps.tar.gz"
+type = "unspecified"
+title = "backend-vps.tar.gz → Upload to VPS"

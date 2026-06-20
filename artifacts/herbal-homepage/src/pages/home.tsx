@@ -17,7 +17,7 @@ import { Footer } from "@/components/Footer";
 import hero1 from "@/assets/hero-1.png";
 import hero2 from "@/assets/hero-2.png";
 import hero3 from "@/assets/hero-3.png";
-import aboutImg from "@/assets/about-image.png";
+import aboutImg from "@assets/image_3.jpg_1781680763629.jpeg";
 import prodAshwagandha from "@/assets/product-ashwagandha.png";
 import prodTurmeric from "@/assets/product-turmeric.png";
 import prodNeem from "@/assets/product-neem.png";

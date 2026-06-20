@@ -27,9 +27,9 @@ execSync("pnpm --filter @workspace/herbal-homepage run build", {
   env: {
     ...process.env,
     PORT: "3000",
-    BASE_PATH: "/pukhrajherbals/",
+    BASE_PATH: "/",
     NODE_ENV: "production",
-    VITE_API_BASE: "/pukhrajherbals/api",
+    VITE_API_BASE: "https://api.pukhrajherbals.com/pukhrajherbals/api",
     REPL_ID: "",
   },
   stdio: "inherit",
@@ -40,9 +40,45 @@ if (!existsSync(frontendOut)) {
   throw new Error("Frontend build failed — dist/public not found");
 }
 
-// 3. Copy frontend to deploy/public
+// 3. Copy frontend to deploy/public and add .htaccess for Apache SPA routing
 console.log("\n3. Copying frontend to deploy/public...");
 await cp(frontendOut, path.join(deployDir, "public"), { recursive: true });
+
+// .htaccess so Apache shared hosting serves index.html for all SPA routes
+const htaccess = `Options -MultiViews
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [QSA,L]
+`;
+await writeFile(path.join(deployDir, "public", ".htaccess"), htaccess);
+
+// sitemap.xml for pukhrajherbals.com
+const BASE_URL = "https://pukhrajherbals.com";
+const TODAY = new Date().toISOString().split("T")[0];
+const sitemapRoutes = [
+  { loc: "/",               priority: "1.0", changefreq: "weekly"  },
+  { loc: "/about",          priority: "0.9", changefreq: "monthly" },
+  { loc: "/products",       priority: "0.9", changefreq: "weekly"  },
+  { loc: "/categories",     priority: "0.8", changefreq: "weekly"  },
+  { loc: "/manufacturing",  priority: "0.8", changefreq: "monthly" },
+  { loc: "/certifications", priority: "0.7", changefreq: "monthly" },
+  { loc: "/sustainability",  priority: "0.7", changefreq: "monthly" },
+  { loc: "/blog",           priority: "0.8", changefreq: "weekly"  },
+  { loc: "/contact",        priority: "0.7", changefreq: "monthly" },
+];
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapRoutes.map(r => `  <url>
+    <loc>${BASE_URL}${r.loc}</loc>
+    <lastmod>${TODAY}</lastmod>
+    <changefreq>${r.changefreq}</changefreq>
+    <priority>${r.priority}</priority>
+  </url>`).join("\n")}
+</urlset>
+`;
+await writeFile(path.join(deployDir, "public", "sitemap.xml"), sitemap);
+console.log("   ✓ sitemap.xml generated for pukhrajherbals.com");
 
 const esbuildOpts = {
   platform: "node",
@@ -101,17 +137,22 @@ await writeFile(path.join(deployDir, "package.json"), JSON.stringify(pkg, null, 
 await mkdir(path.join(deployDir, "uploads"), { recursive: true });
 await writeFile(path.join(deployDir, "uploads", ".gitkeep"), "");
 
-// 7. Summary
-const files = await readdir(deployDir);
+// 7. Package into two separate archives
+const outDir = path.resolve(root, "deploy_output");
+await mkdir(outDir, { recursive: true });
+
+const frontendArchive = path.join(outDir, "frontend-shared-hosting.tar.gz");
+const backendArchive  = path.join(outDir, "backend-vps.tar.gz");
+
+// Frontend: everything in deploy/public (upload to public_html root)
+execSync(`tar -czf "${frontendArchive}" -C "${path.join(deployDir, "public")}" .`);
+
+// Backend: index.cjs, seed.cjs, package.json, uploads/
+execSync(`tar -czf "${backendArchive}" -C "${deployDir}" index.cjs seed.cjs package.json uploads`);
+
 console.log("\n=== ✅ Build complete! ===");
-console.log(`\nOutput: deploy/`);
-console.log("Contents:", files.join(", "));
-console.log("\nRequired env vars on your server:");
-console.log("  MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/dbname");
-console.log("  SESSION_SECRET=your-secret-key");
-console.log("\nOptional env vars:");
-console.log("  PORT=6396       (default: 6396)");
-console.log("  BASE_PATH=/pukhrajherbals  (default: /pukhrajherbals)");
-console.log("\nTo start:");
-console.log("  node index.cjs");
-console.log("\nApp URL: http://your-server:6396/pukhrajherbals/");
+console.log("\n📦 Two archives created in deploy_output/:");
+console.log(`   frontend-shared-hosting.tar.gz  → upload to public_html on shared hosting`);
+console.log(`   backend-vps.tar.gz              → upload & run on VPS (port 6396)`);
+console.log("\nVPS startup:");
+console.log("  PORT=6396 BASE_PATH=/pukhrajherbals MONGODB_URI='...' SESSION_SECRET='...' node index.cjs");

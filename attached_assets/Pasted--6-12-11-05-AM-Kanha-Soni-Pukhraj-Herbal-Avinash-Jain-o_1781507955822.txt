@@ -1,0 +1,89 @@
+[6/12, 11:05 AM] Kanha Soni Pukhraj Herbal: @⁨Avinash Jain⁩ one more thing need to be added in the footer...
+
+add amazon and meesho logo and write somthing like its also available on amazon and meesho
+[6/12, 12:49 PM] Kanha Soni Pukhraj Herbal: certificate...
+fassi, gmp, iso, msme, ayush
+[6/13, 11:37 AM] Kanha Soni Pukhraj Herbal: about page... https://www.pukhrajherbal.com/about-us.html
+----
+GMP & ISO Certified
+Meeting global quality standards since 2010
+
+Our Story
+Bridging Ancient Tradition & Modern Science
+Founded in 2008, Pukhraj Herbals began as a humble extraction unit with a singular vision: to make the healing power of Ayurvedic plants accessible to the world through scientifically validated, standardized extracts.
+
+Today, we operate two GMP-certified manufacturing facilities equipped with cutting-edge extraction, purification, and analysis technologies.
+
+From the farms of Gujarat and Kerala to labs in Europe, the USA, and beyond, Pukhraj Herbals is a trusted name in pure herbal excellence.
+
+-----
+
+(Our Core Values)section
+Global Reach
+Trusted by manufacturers in 25+ countries across pharma, nutraceutical, and cosmetic industries.
+
+Quality Assured
+GMP and ISO certified processes, testing at every stage from raw material to final product.
+
+-----
+
+(Milestones of Growth)
+2008
+Founded by Dr. Milind Jhilewar with a single extraction unit in Mandsaur, India.
+
+2010
+Achieved GMP certification. Expanded product portfolio to 100+ botanical extracts.
+
+2012
+Opened second state-of-the-art facility of Expeller Based Cold-Pressed Vegetable Seed Oil & Herbal Seed oil Unit (Immuno Natural Oils Pvt. Ltd.).
+
+2013
+Standardized Extracts & Oils. Exports to 25+ countries.
+
+2020
+Expanded to CO2 Extraction Facility (Bakuchiol, Pomogranate, Kalonji(nigilia sativa).
+
+2021
+300+ products. Present in 25+ countries. Leading name in botanical excellence.
+
+-----
+
+Manufacturing Facility page....
+
+Our Facility
+Where Science Meets Nature
+Pukhraj Herbals operates two GMP and ISO 9001 certified manufacturing facilities located in Mandsaur, Madhya Pradesh — India's heartland for pharmaceutical and botanical ingredient production.
+
+Together, our facilities span 20,000 square feet of manufacturing, laboratory, and warehouse space. Every area is designed to meet international regulatory requirements for cGMP (current Good Manufacturing Practice), supporting customers in regulated markets across the US, EU, and beyond.
+
+20,000 sq. ft.
+Total Manufacturing Area
+
+250 MT / year
+Extraction Capacity
+
+1,200 MT
+Storage Capacity
+
+300+
+Active SKUs in Production
+
+(End-to-End Manufacturing)section
+remove---
+Spray & Freeze Drying
+In-House QC Laboratory
+Cold Chain Storage
+
+(Our Manufacturing Process)section...
+remove only this line in 4 step...(Spray or freeze) 
+
+
+Sustainability page....
+
+(5th box)
+50 - 100 Rural Livelihoods
+Community Empowerment
+
+Our 2030 Sustainability Goals
+remove center box---(200+ Certified Organic Farm Partners)
+[6/13, 11:42 AM] Kanha Soni Pukhraj Herbal: @⁨Avinash Jain⁩ purani site pr jo about page me likha h wese data analysis krke add krdo, and footer me company ka name jo likha hai uski jag company ka logo or logo ke right site me company name
