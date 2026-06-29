@@ -28,7 +28,7 @@ export default function Contact() {
   const address = settings["contact_address"] || "Indore, Madhya Pradesh, India";
 
   const contactInfo = [
-    { Icon: MapPin, title: "Head Office", lines: ["Pukhraj Herbals Pvt. Ltd.", address] },
+    { Icon: MapPin, title: "Head Office", lines: ["Pukhraj Herbals", address] },
     { Icon: Phone, title: "Call Us", lines: [phone, "Mon–Sat: 9:00 AM – 6:00 PM IST"] },
     { Icon: Mail, title: "Email Us", lines: [email, salesEmail] },
     { Icon: Clock, title: "Business Hours", lines: ["Monday – Friday: 9 AM – 6 PM", "Saturday: 9 AM – 2 PM", "Sunday: Closed"] },
@@ -157,8 +157,8 @@ export default function Contact() {
                   />
                 </div>
                 <div className="bg-primary text-primary-foreground p-8 rounded-2xl">
-                  <h3 className="font-serif font-bold text-xl mb-3">Pukhraj Herbals Pvt. Ltd.</h3>
-                  <p className="text-primary-foreground/80 text-sm mb-5 leading-relaxed">GMP & ISO certified manufacturer of premium botanical extracts, powders, and oils. Trusted by 500+ manufacturers in 30+ countries.</p>
+                  <h3 className="font-serif font-bold text-xl mb-3">Pukhraj Herbals</h3>
+                  <p className="text-primary-foreground/80 text-sm mb-5 leading-relaxed">GMP & ISO certified manufacturer of premium botanical extracts, powders, and oils. Trusted by leading manufacturers across the pharmaceutical, nutraceutical, and cosmetic industries.</p>
                   <div className="space-y-3 text-sm">
                     <div className="flex items-center gap-3"><Phone className="w-4 h-4 shrink-0" /><span>{phone}</span></div>
                     <div className="flex items-center gap-3"><Mail className="w-4 h-4 shrink-0" /><span>{email}</span></div>

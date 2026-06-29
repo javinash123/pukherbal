@@ -1,0 +1,1 @@
+- [MongoDB→PostgreSQL migration](pg-migration.md) — API server migrated from Mongoose to pg; deploy.ts is the build entry, not index.ts

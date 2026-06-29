@@ -38,9 +38,9 @@ export default function ProductDetail() {
   const [notFound, setNotFound] = useState(false);
 
   useSEO({
-    title: product ? (product.metaTitle || `${product.name} | Pukhraj Herbals`) : undefined,
-    description: product?.metaDescription || product?.description?.replace(/<[^>]*>/g, "").slice(0, 160),
-    keywords: product?.metaKeywords,
+    title: product ? (product.seoTitle || `${product.name} | Pukhraj Herbals`) : undefined,
+    description: product?.seoDescription || product?.description?.replace(/<[^>]*>/g, "").slice(0, 160),
+    keywords: product?.seoKeywords,
     ogImage: product?.imageUrl,
   });
 
@@ -169,7 +169,7 @@ export default function ProductDetail() {
                 <div className="flex flex-col sm:flex-row gap-3 pt-2">
                   <Link href="/contact">
                     <Button size="lg" className="rounded-full w-full sm:w-auto">
-                      Request Enquiry <ArrowRight className="ml-2 w-4 h-4" />
+                      Request Enquiry & Sample <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                   </Link>
                   <Link href="/products">

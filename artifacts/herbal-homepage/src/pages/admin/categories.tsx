@@ -12,12 +12,12 @@ interface Category {
   imageUrl?: string;
   active: boolean;
   sortOrder: number;
-  metaTitle?: string;
-  metaDescription?: string;
-  metaKeywords?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
 }
 
-const emptyForm = { name: "", description: "", imageUrl: "", sortOrder: 0, active: true, metaTitle: "", metaDescription: "", metaKeywords: "" };
+const emptyForm = { name: "", description: "", imageUrl: "", sortOrder: 0, active: true, seoTitle: "", seoDescription: "", seoKeywords: "" };
 const PAGE_SIZE = 10;
 
 export default function AdminCategories() {

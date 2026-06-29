@@ -167,3 +167,9 @@ id = "Dl0YZIDFJc4gIhxWMRuwX"
 uri = "file://deploy_output/backend-vps.tar.gz"
 type = "unspecified"
 title = "backend-vps.tar.gz → Upload to VPS"
+
+[[outputs]]
+id = "N8iSJudZh5ybRwcilUtbU"
+uri = "file://pukhrajherbals-frontend.zip"
+type = "unspecified"
+title = "pukhrajherbals-frontend.zip"

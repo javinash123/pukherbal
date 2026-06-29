@@ -17,9 +17,9 @@ interface Product {
   active: boolean;
   featured: boolean;
   sortOrder: number;
-  metaTitle?: string;
-  metaDescription?: string;
-  metaKeywords?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
 }
 
 interface Category { id: string; name: string; }
@@ -34,9 +34,9 @@ const emptyForm = {
   sortOrder: 0,
   active: true,
   featured: false,
-  metaTitle: "",
-  metaDescription: "",
-  metaKeywords: "",
+  seoTitle: "",
+  seoDescription: "",
+  seoKeywords: "",
 };
 
 const PAGE_SIZE = 10;

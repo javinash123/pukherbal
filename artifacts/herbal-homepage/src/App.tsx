@@ -27,6 +27,7 @@ import AdminSettings from "@/pages/admin/settings";
 import AdminEnquiries from "@/pages/admin/enquiries";
 import AdminHeroSlides from "@/pages/admin/hero-slides";
 import AdminVideoItems from "@/pages/admin/video-items";
+import Sitemap from "@/pages/sitemap";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,7 @@ function AppRouter() {
       <Route path="/certifications" component={Certifications} />
       <Route path="/sustainability" component={Sustainability} />
       <Route path="/manufacturing" component={Manufacturing} />
+      <Route path="/sitemap" component={Sitemap} />
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/admin/categories" component={AdminCategories} />

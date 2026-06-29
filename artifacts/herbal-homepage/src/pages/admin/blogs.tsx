@@ -17,9 +17,9 @@ interface Blog {
   author: string;
   published: boolean;
   featured: boolean;
-  metaTitle?: string;
-  metaDescription?: string;
-  metaKeywords?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
 }
 
 const emptyForm = {
@@ -32,9 +32,9 @@ const emptyForm = {
   author: "Pukhraj Herbals",
   published: false,
   featured: false,
-  metaTitle: "",
-  metaDescription: "",
-  metaKeywords: "",
+  seoTitle: "",
+  seoDescription: "",
+  seoKeywords: "",
 };
 
 const PAGE_SIZE = 10;

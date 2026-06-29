@@ -23,9 +23,9 @@ export default function BlogDetail() {
   const [notFound, setNotFound] = useState(false);
 
   useSEO({
-    title: blog ? (blog.metaTitle || `${blog.title} | Pukhraj Herbals`) : undefined,
-    description: blog?.metaDescription || blog?.excerpt,
-    keywords: blog?.metaKeywords,
+    title: blog ? (blog.seoTitle || `${blog.title} | Pukhraj Herbals`) : undefined,
+    description: blog?.seoDescription || blog?.excerpt,
+    keywords: blog?.seoKeywords,
     ogImage: blog?.imageUrl,
   });
 

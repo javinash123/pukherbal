@@ -138,7 +138,7 @@ export function Footer() {
             © {new Date().getFullYear()} Pukhraj Herbals. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="text-background/40 hover:text-primary text-sm transition-colors">Sitemap</a>
+            <Link href="/sitemap" className="text-background/40 hover:text-primary text-sm transition-colors">Sitemap</Link>
             <a href="#" className="text-background/40 hover:text-primary text-sm transition-colors">Privacy Policy</a>
             <a href="#" className="text-background/40 hover:text-primary text-sm transition-colors">Terms of Service</a>
           </div>

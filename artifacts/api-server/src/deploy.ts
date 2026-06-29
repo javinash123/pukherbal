@@ -4,7 +4,7 @@ import fs from "node:fs";
 import cors from "cors";
 import router from "./routes";
 import { logger } from "./lib/logger";
-import { connectMongo } from "./lib/mongoose";
+import { pool } from "@workspace/db";
 
 function loadEnvFile(filepath: string) {
   if (!fs.existsSync(filepath)) return;
@@ -29,7 +29,7 @@ loadEnvFile(path.join(appDir, ".env"));
 if (!process.env["NODE_ENV"]) process.env["NODE_ENV"] = "production";
 
 const PORT = Number(process.env["PORT"]) || 6396;
-const BASE_PATH = process.env["BASE_PATH"] || "/pukhrajherbals";
+const BASE_PATH = process.env["BASE_PATH"] ?? "";
 const publicDir = path.join(appDir, "public");
 const uploadsDir = path.join(appDir, "uploads");
 
@@ -50,19 +50,19 @@ app.use(express.urlencoded({ extended: true }));
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 app.use(`${BASE_PATH}/api/uploads`, express.static(uploadsDir));
 
-connectMongo()
-  .then(() => logger.info("Connected to MongoDB"))
+pool.query("SELECT 1")
+  .then(() => logger.info("Connected to PostgreSQL"))
   .catch((err) => {
-    logger.error({ err }, "Failed to connect to MongoDB");
+    logger.error({ err }, "Failed to connect to PostgreSQL");
     process.exit(1);
   });
 
-// API routes mounted under /pukhrajherbals/api
+// API routes
 app.use(`${BASE_PATH}/api`, router);
 
 // Static frontend assets (serves index.html for directory requests by default)
 app.use(
-  BASE_PATH,
+  BASE_PATH || "/",
   express.static(publicDir, {
     index: "index.html",
     maxAge: "7d",
@@ -75,14 +75,16 @@ app.use(
 );
 
 // SPA fallback - send index.html for any deep client-side route
-app.get(`${BASE_PATH}/*splat`, (_req: Request, res: Response) => {
+app.get(`${BASE_PATH || ""}/*splat`, (_req: Request, res: Response) => {
   res.sendFile(path.join(publicDir, "index.html"));
 });
 
-// Root redirect to BASE_PATH for convenience
-app.get("/", (_req: Request, res: Response) => {
-  res.redirect(BASE_PATH + "/");
-});
+// Root redirect to BASE_PATH for convenience (only when BASE_PATH is non-empty)
+if (BASE_PATH) {
+  app.get("/", (_req: Request, res: Response) => {
+    res.redirect(BASE_PATH + "/");
+  });
+}
 
 app.listen(PORT, () => {
   logger.info({ port: PORT, basePath: BASE_PATH }, `Server listening on http://localhost:${PORT}${BASE_PATH}/`);

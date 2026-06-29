@@ -39,9 +39,9 @@ export default function CategoryDetail() {
   const [search, setSearch] = useState("");
 
   useSEO({
-    title: category ? (category.metaTitle || `${category.name} | Pukhraj Herbals`) : undefined,
-    description: category?.metaDescription || category?.description,
-    keywords: category?.metaKeywords,
+    title: category ? (category.seoTitle || `${category.name} | Pukhraj Herbals`) : undefined,
+    description: category?.seoDescription || category?.description,
+    keywords: category?.seoKeywords,
     ogImage: category?.imageUrl,
   });
 
